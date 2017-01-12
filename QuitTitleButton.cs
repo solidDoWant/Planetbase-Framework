@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlanetbaseFramework
 {
-    class QuitTitleButton : TitleButton
+    public class QuitTitleButton : TitleButton
     {
         public QuitTitleButton() : base("quit", true)
         {

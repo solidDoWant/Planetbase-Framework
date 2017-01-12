@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PlanetbaseFramework
 {
-    class Utils
+    public class Utils
     {
         public static Texture2D LoadPNG(string filePath)
         {

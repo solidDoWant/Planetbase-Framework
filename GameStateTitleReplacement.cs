@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlanetbaseFramework
 {
-    class GameStateTitleReplacement : Planetbase.GameStateTitle
+    public class GameStateTitleReplacement : Planetbase.GameStateTitle
     {
         public GameStateTitleReplacement(GameState previousState) : base(previousState)
         {

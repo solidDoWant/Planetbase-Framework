@@ -2,7 +2,7 @@
 
 namespace PlanetbaseFramework
 {
-    class SettingsTitleButton : TitleButton
+    public class SettingsTitleButton : TitleButton
     {
         public SettingsTitleButton() : base("settings", true)
         {
