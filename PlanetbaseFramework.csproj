@@ -68,6 +68,7 @@
     <Compile Include="GameStateTitleReplacement.cs" />
     <Compile Include="ModBase.cs" />
     <Compile Include="LoadGameTitleButton.cs" />
+    <Compile Include="Modloader.cs" />
     <Compile Include="NewGameTitleButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuitTitleButton.cs" />
@@ -80,6 +81,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) "T:\Steam Files\steamapps\common\Planetbase\Planetbase_Data\Managed"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
