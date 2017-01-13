@@ -9,7 +9,7 @@ namespace PlanetbaseFramework
     {
         public static Texture2D LoadPNG(ModBase mod, string filename)
         {
-            string path = mod.ModName + filename;
+            string path = mod.ModPath + filename;
             return LoadPNGFromFile(path);
         }
 
