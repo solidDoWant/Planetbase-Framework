@@ -5,39 +5,8 @@ using UnityEngine;
 
 namespace PlanetbaseFramework
 {
-    public class Utils
+    public static class Utils
     {
-        public static Texture2D LoadPNG(ModBase mod, string filename)
-        {
-            string path = mod.ModName + filename;
-            return LoadPNGFromFile(path);
-        }
-
-        public static Texture2D[] LoadAllPNG(ModBase mod, string subfolder = null)
-        {
-            string[] files = null;
-            if(subfolder == null)
-            {
-                files = Directory.GetFiles(mod.ModPath, "*.png");
-            } else if(Directory.Exists(mod.ModPath + subfolder + Path.DirectorySeparatorChar.ToString()))
-            {
-                files = Directory.GetFiles(mod.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
-            }
-            else
-            {
-                Debug.Log("Could not load PNG files from invalid folder " + mod.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
-                throw new Exception("Could not load PNG files from invalid folder " + mod.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
-            }
-
-            Texture2D[] loadedFiles = new Texture2D[files.Length];
-            for(int i = 0; i < files.Length; i++)
-            {
-                loadedFiles[i] = LoadPNG(mod, subfolder + Path.DirectorySeparatorChar.ToString() + files[i]);
-            }
-
-            return loadedFiles;
-        }
-
         public static Texture2D LoadPNGFromFile(string AbsolutePath)
         {
             Texture2D tex = null;
@@ -50,6 +19,11 @@ namespace PlanetbaseFramework
                 tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             }
             return tex;
+        }
+
+        public static bool Compare (this Type t1, Type t2)
+        {
+            return t1.FullName.Equals(t2.FullName);
         }
     }
 }

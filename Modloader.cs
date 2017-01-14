@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PlanetbaseFramework
@@ -34,6 +31,8 @@ namespace PlanetbaseFramework
                             {
                                 Debug.Log("Error loading mod from file: " + file + " of type: " + type.Name.ToString() + ". Exception thrown:");
                                 Debug.Log(e.ToString() + ": " + e.Message);
+                                Debug.Log("Stacktrace: ");
+                                Debug.Log(e.StackTrace);
                             }
 
                             if (mod != null)
@@ -48,6 +47,8 @@ namespace PlanetbaseFramework
                                 {
                                     Debug.Log("Error initializing mod from file: " + file + " of type: " + type.Name.ToString() + ". Exception thrown:");
                                     Debug.Log(e.ToString() + ": " + e.Message);
+                                    Debug.Log("Stacktrace: ");
+                                    Debug.Log(e.StackTrace);
                                 }
                             }
                             else
@@ -75,6 +76,8 @@ namespace PlanetbaseFramework
                 {
                     Debug.Log("Error updating mod " + mod.ModName +  ". Exception thrown:");
                     Debug.Log(e.ToString() + ": " + e.Message);
+                    Debug.Log("Stacktrace: ");
+                    Debug.Log(e.StackTrace);
                 }
             }
         }
