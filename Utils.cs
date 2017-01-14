@@ -15,7 +15,7 @@ namespace PlanetbaseFramework
             if (File.Exists(AbsolutePath))
             {
                 fileData = File.ReadAllBytes(AbsolutePath);
-                tex = new Texture2D(2, 2);
+                tex = new Texture2D(2, 2);  //TODO fix this to be of arbitrary size
                 tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             }
             return tex;

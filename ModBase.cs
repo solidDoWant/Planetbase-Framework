@@ -77,7 +77,7 @@ namespace PlanetbaseFramework
 
         public Texture2D LoadPNG(string filename)
         {
-            string path = this.ModName + filename;
+            string path = this.ModPath + filename;
             return Utils.LoadPNGFromFile(path);
         }
 
