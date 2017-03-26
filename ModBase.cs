@@ -60,9 +60,14 @@ namespace PlanetbaseFramework
             }
         }
 
-        public abstract void Init();
+        public virtual void Init()
+        {
+        }
 
-        public abstract void Update();
+        public virtual void Update()
+        {
+
+        }
 
         private class ModNameNotSetException : Exception
         {

@@ -5,8 +5,9 @@ namespace PlanetbaseFramework
 {
     public abstract class TitleButton
     {
-        private String name;
-        private Boolean enableGUI;
+        public String name { get; }
+        public Boolean enableGUI { get; }
+        public Boolean isBaseGameTitleButton { get; }
 
         private static LinkedList<TitleButton> allTitleButtons = new LinkedList<TitleButton>();
 
@@ -21,22 +22,18 @@ namespace PlanetbaseFramework
             new QuitTitleButton();
         }
 
-        public TitleButton(String nameKey, Boolean enableGUI)
+        protected internal TitleButton(String nameKey, Boolean enableGUI, Boolean isBaseGameTitleButton)
         {
             this.name = Planetbase.StringList.get(nameKey);
             this.enableGUI = enableGUI;
+            this.isBaseGameTitleButton = isBaseGameTitleButton;
 
             allTitleButtons.AddLast(this);
         }
 
-        public String getName()
+        public TitleButton(String nameKey, Boolean enableGUI) : this(nameKey, enableGUI, false)
         {
-            return this.name;
-        }
-
-        public Boolean allowEnableGUI()
-        {
-            return this.enableGUI;
+            
         }
 
         public static LinkedList<TitleButton> getAllTitleButtons()

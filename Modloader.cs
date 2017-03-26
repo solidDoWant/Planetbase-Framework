@@ -11,6 +11,12 @@ namespace PlanetbaseFramework
         public static List<ModBase> modList = new List<ModBase>();
         public static void loadMods()
         {
+            Debug.Log("Loading mod \"Planetbase Framework\"");
+            ModBase frameworkMod = new FrameworkMod();
+            modList.Add(frameworkMod);
+            frameworkMod.Init();
+            Debug.Log("Loaded mod \"Planetbase Framework\"");
+
             if (Directory.Exists(ModBase.BasePath))
             {
                 string[] files = Directory.GetFiles(ModBase.BasePath, "*.dll");

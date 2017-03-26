@@ -30,21 +30,36 @@ namespace PlanetbaseFramework
             float height2 = (float)(Screen.height * backgroundRight.height) / 1080f;
             float width2 = height2 * (float)backgroundRight.width / (float)backgroundRight.height;
             GUI.DrawTexture(new Rect((float)Screen.width - width2 + this.mRightOffset, (float)(((double)Screen.height - (double)height2) * 0.75), width2, height2), (Texture)backgroundRight);
-            float y = menuLocation.y;
+
+            GUI.DrawTexture(new Rect(-this.mRightOffset + width2, (float)(((double)Screen.height - (double)height2) * 0.75), -width2, height2), (Texture)backgroundRight);
+
+            float baseY = menuLocation.y;
+            float modY = baseY;
             float num1 = menuButtonSize.y * 1.3f;
             menuLocation.x -= menuButtonSize.x;
             menuLocation.x += this.mRightOffset;
 
             foreach (TitleButton button in TitleButton.getAllTitleButtons())
             {
-                GUI.enabled = button.allowEnableGUI();
+                GUI.enabled = button.enableGUI;
 
-                if (this.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, y, menuButtonSize.x, menuButtonSize.y), button.getName(), FontSize.Huge, true))
+                if (button.isBaseGameTitleButton)
                 {
-                    button.handleAction(this);
-                }
+                    if (this.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, baseY, menuButtonSize.x, menuButtonSize.y), button.name, FontSize.Huge, true))
+                    {
+                        button.handleAction(this);
+                    }
 
-                y += num1;
+                    baseY += num1; 
+                }
+                else {
+                    if (this.mGuiRenderer.renderTitleButton(new Rect(Screen.width - menuLocation.x - menuButtonSize.x, modY, menuButtonSize.x, menuButtonSize.y), button.name, FontSize.Huge, true))
+                    {
+                        button.handleAction(this);
+                    }
+
+                    modY += num1;
+                }
             }
 
             if (this.mConfirmWindow != null)

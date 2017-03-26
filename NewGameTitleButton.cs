@@ -4,7 +4,7 @@ namespace PlanetbaseFramework
 {
     public class NewGameTitleButton : TitleButton
     {
-        public NewGameTitleButton() : base("new_game", true)
+        public NewGameTitleButton() : base("new_game", true, true)
         {
         }
 

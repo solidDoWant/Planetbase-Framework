@@ -4,7 +4,7 @@ namespace PlanetbaseFramework
 {
     public class ContinueGameTitleButton : TitleButton
     {
-        public ContinueGameTitleButton() : base("continue_game", SaveData.anySaveGames())
+        public ContinueGameTitleButton() : base("continue_game", SaveData.anySaveGames(), true)
         {
         }
 

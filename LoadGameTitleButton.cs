@@ -4,7 +4,7 @@ namespace PlanetbaseFramework
 {
     public class LoadGameTitleButton : TitleButton
     {
-        public LoadGameTitleButton() : base("load_game", SaveData.anySaveGames())
+        public LoadGameTitleButton() : base("load_game", SaveData.anySaveGames(), true)
         {
         }
 

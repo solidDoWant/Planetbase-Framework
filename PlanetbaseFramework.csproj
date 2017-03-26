@@ -49,9 +49,8 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>T:\Steam Files\steamapps\common\Planetbase\Planetbase_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,17 +61,19 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>T:\Steam Files\steamapps\common\Planetbase\Planetbase_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseModuleType.cs" />
     <Compile Include="ChallengesTitleButton.cs" />
     <Compile Include="ContinueGameTitleButton.cs" />
+    <Compile Include="FrameworkMod.cs" />
     <Compile Include="GameStateTitleReplacement.cs" />
     <Compile Include="ImportOBJ.cs" />
     <Compile Include="ModBase.cs" />
     <Compile Include="LoadGameTitleButton.cs" />
+    <Compile Include="ModListGameState.cs" />
     <Compile Include="Modloader.cs" />
     <Compile Include="NewGameTitleButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,7 +92,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) "T:\Steam Files\steamapps\common\Planetbase\Planetbase_Data\Managed"</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) "C:\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

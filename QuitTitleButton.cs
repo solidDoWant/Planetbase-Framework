@@ -5,7 +5,7 @@ namespace PlanetbaseFramework
 {
     public class QuitTitleButton : TitleButton
     {
-        public QuitTitleButton() : base("quit", true)
+        public QuitTitleButton() : base("quit", true, true)
         {
         }
 
