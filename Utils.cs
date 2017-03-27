@@ -6,7 +6,8 @@ using UnityEngine;
 namespace PlanetbaseFramework
 {
     public static class Utils
-    {
+    {   public static Texture2D ErrorTexture { get; internal set; }
+
         public static Texture2D LoadPNGFromFile(string AbsolutePath)
         {
             Texture2D tex = null;
@@ -17,6 +18,12 @@ namespace PlanetbaseFramework
                 fileData = File.ReadAllBytes(AbsolutePath);
                 tex = new Texture2D(2, 2);  //TODO fix this to be of arbitrary size
                 tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+                tex.name = Path.GetFileName(AbsolutePath);
+            }
+            else
+            {
+                Debug.Log("Error loading texture: \"" + AbsolutePath + "\"");
+                tex = ErrorTexture;
             }
             return tex;
         }

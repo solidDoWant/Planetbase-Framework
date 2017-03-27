@@ -1,5 +1,6 @@
 ﻿using Planetbase;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace PlanetbaseFramework
 {
     public abstract class ModBase
     {
-        public Texture2D[] modTextures
+        public List<Texture2D> modTextures
         {
             get; set;
         }
@@ -80,33 +81,26 @@ namespace PlanetbaseFramework
             }
         }
 
-        public Texture2D LoadPNG(string filename)
-        {
-            string path = this.ModPath + filename;
-            return Utils.LoadPNGFromFile(path);
-        }
-
-        public Texture2D[] LoadAllPNG(string subfolder = null)
+        public List<Texture2D> LoadAllPNG(string subfolder = null)
         {
             string[] files = null;
             if (subfolder == null)
             {
                 files = Directory.GetFiles(this.ModPath, "*.png");
             }
-            else if (Directory.Exists(this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString()))
+            else if (Directory.Exists(this.ModPath + subfolder))
             {
-                files = Directory.GetFiles(this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
+                files = Directory.GetFiles(this.ModPath + subfolder);
             }
             else
             {
-                Debug.Log("Could not load PNG files from invalid folder " + this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
                 throw new Exception("Could not load PNG files from invalid folder " + this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
             }
 
-            Texture2D[] loadedFiles = new Texture2D[files.Length];
-            for (int i = 0; i < files.Length; i++)
+            List<Texture2D> loadedFiles = new List<Texture2D>(files.Length);
+            foreach (String file in files)
             {
-                loadedFiles[i] = LoadPNG(subfolder + Path.DirectorySeparatorChar.ToString() + files[i]);
+                loadedFiles.Add(Utils.LoadPNGFromFile(file));
             }
 
             return loadedFiles;

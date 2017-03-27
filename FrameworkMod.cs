@@ -1,6 +1,4 @@
-﻿using System;
-using Planetbase;
-using UnityEngine;
+﻿using Planetbase;
 
 namespace PlanetbaseFramework
 {
@@ -8,7 +6,9 @@ namespace PlanetbaseFramework
     {
         public FrameworkMod() : base("Planetbase Framework")
         {
+            Utils.ErrorTexture = modTextures.Find(x => x.name.Equals("error.png"));
         }
+
         public override void Init()
         {
             ModTitleButton modTitleButton = new ModTitleButton();

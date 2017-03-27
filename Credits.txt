@@ -1,0 +1,2 @@
+solidDoWant - Main framework
+aaro4130 - OBJ importer, https://forum.unity3d.com/threads/free-runtime-obj-loader.365884/
