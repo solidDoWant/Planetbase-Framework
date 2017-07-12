@@ -77,7 +77,7 @@ namespace PlanetbaseFramework
             if (instance2.isWorkshopEnabled())
             {
                 if (this.mGuiRenderer.renderButton(rect, new GUIContent((string)null, (Texture)instance1.Icons.Workshop, StringList.get("steam_workshop")), (SoundDefinition)null))
-                    instance2.openWorkshop();
+                    instance2.openWorkshop(null);
                 rect.x += num3 + num4;
             }
             if (this.mGuiRenderer.renderButton(rect, new GUIContent((string)null, (Texture)instance1.Icons.Credits, StringList.get("credits")), (SoundDefinition)null))

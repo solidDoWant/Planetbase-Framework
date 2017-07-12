@@ -8,10 +8,8 @@ namespace PlanetbaseFramework
 {
     public abstract class ModBase
     {
-        public List<Texture2D> modTextures
-        {
-            get; set;
-        }
+        public List<Texture2D> modTextures { get; protected set; }
+        public List<GameObject> modObjects { get; protected set; }
         public ModBase(string ModName = "")
         {
             if (ModName == null || ModName.Equals(""))
@@ -34,9 +32,20 @@ namespace PlanetbaseFramework
             {
                 modTextures = this.LoadAllPNG("assets" + Path.DirectorySeparatorChar + "png" + Path.DirectorySeparatorChar);
 
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 Debug.Log("Couldn't/no PNG files to load");
+            }
+
+            try
+            {
+                modObjects = this.LoadAllOBJ("assets" + Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar);
+
+            }
+            catch (Exception)
+            {
+                Debug.Log("Couldn't/no OBJ files to load");
             }
         }
 
@@ -83,19 +92,7 @@ namespace PlanetbaseFramework
 
         public List<Texture2D> LoadAllPNG(string subfolder = null)
         {
-            string[] files = null;
-            if (subfolder == null)
-            {
-                files = Directory.GetFiles(this.ModPath, "*.png");
-            }
-            else if (Directory.Exists(this.ModPath + subfolder))
-            {
-                files = Directory.GetFiles(this.ModPath + subfolder);
-            }
-            else
-            {
-                throw new Exception("Could not load PNG files from invalid folder " + this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
-            }
+            string[] files = GetFilesMatchingFiletype("png", subfolder);
 
             List<Texture2D> loadedFiles = new List<Texture2D>(files.Length);
             foreach (String file in files)
@@ -104,6 +101,39 @@ namespace PlanetbaseFramework
             }
 
             return loadedFiles;
+        }
+
+        public List<GameObject> LoadAllOBJ(string subfolder = null)
+        {
+
+            string[] files = GetFilesMatchingFiletype("obj", subfolder);
+
+            List<GameObject> loadedFiles = new List<GameObject>(files.Length);
+            foreach (String file in files)
+            {
+                GameObject loadedObject = OBJLoader.LoadOBJFile(file, modTextures);
+                loadedObject.setVisibleRecursive(false);
+                loadedObject.name = Path.GetFileName(file);
+                loadedFiles.Add(loadedObject);
+            }
+
+            return loadedFiles;
+        }
+
+        private string[] GetFilesMatchingFiletype(string filetype, string subfolder = null)
+        {
+            if (subfolder == null)
+            {
+                return Directory.GetFiles(this.ModPath, "*." + filetype);
+            }
+            else if (Directory.Exists(this.ModPath + subfolder))
+            {
+                return Directory.GetFiles(this.ModPath + subfolder);
+            }
+            else
+            {
+                throw new Exception("Could not load " + filetype.ToUpper() + " files from invalid folder " + this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
+            }
         }
     }
 }

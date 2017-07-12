@@ -65,7 +65,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseModuleType.cs" />
     <Compile Include="ChallengesTitleButton.cs" />
     <Compile Include="ContinueGameTitleButton.cs" />
     <Compile Include="FrameworkMod.cs" />
@@ -79,7 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuitTitleButton.cs" />
     <Compile Include="SettingsTitleButton.cs" />
-    <Compile Include="TextureLoader.cs" />
+    <Compile Include="BaseModuleType.cs" />
     <Compile Include="TitleButton.cs" />
     <Compile Include="TutorialTitleButton.cs" />
     <Compile Include="Utils.cs" />
