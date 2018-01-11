@@ -3,12 +3,13 @@ using UnityEngine;
 
 namespace PlanetbaseFramework
 {
-    public class GameStateTitleReplacement : Planetbase.GameStateTitle
+    public class GameStateTitleReplacement : GameStateTitle
     {
         public GameStateTitleReplacement(GameState previousState) : base(previousState)
         {
         }
 
+        //Almost all of this file is copied directly from native PB code, so weird naming/general issues aren't my fault
         public override void onGui()
         {
             if (Input.GetKey(KeyCode.Space))
@@ -39,23 +40,23 @@ namespace PlanetbaseFramework
             menuLocation.x -= menuButtonSize.x;
             menuLocation.x += this.mRightOffset;
 
-            foreach (TitleButton button in TitleButton.getAllTitleButtons())
+            foreach (TitleButton button in TitleButton.GetAllTitleButtons())
             {
-                GUI.enabled = button.enableGUI;
+                GUI.enabled = button.EnableGui;
 
-                if (button.isBaseGameTitleButton)
+                if (button.IsBaseGameTitleButton)
                 {
-                    if (this.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, baseY, menuButtonSize.x, menuButtonSize.y), button.name, FontSize.Huge, true))
+                    if (this.mGuiRenderer.renderTitleButton(new Rect(menuLocation.x, baseY, menuButtonSize.x, menuButtonSize.y), button.Name, FontSize.Huge, true))
                     {
-                        button.handleAction(this);
+                        button.HandleAction(this);
                     }
 
                     baseY += num1; 
                 }
                 else {
-                    if (this.mGuiRenderer.renderTitleButton(new Rect(Screen.width - menuLocation.x - menuButtonSize.x, modY, menuButtonSize.x, menuButtonSize.y), button.name, FontSize.Huge, true))
+                    if (this.mGuiRenderer.renderTitleButton(new Rect(Screen.width - menuLocation.x - menuButtonSize.x, modY, menuButtonSize.x, menuButtonSize.y), button.Name, FontSize.Huge, true))
                     {
-                        button.handleAction(this);
+                        button.HandleAction(this);
                     }
 
                     modY += num1;

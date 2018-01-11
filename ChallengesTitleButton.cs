@@ -8,7 +8,7 @@ namespace PlanetbaseFramework
         {
         }
 
-        public override void handleAction(GameStateTitle gst)
+        public override void HandleAction(GameStateTitle gst)
         {
             if (gst.canAlreadyPlay())
             {
@@ -17,7 +17,7 @@ namespace PlanetbaseFramework
             else
             {
 
-                gst.renderTutorialRequestWindow(new GuiDefinitions.Callback(gst.onWindowCancelChallenges));
+                gst.renderTutorialRequestWindow(gst.onWindowCancelChallenges);
             }
         }
     }

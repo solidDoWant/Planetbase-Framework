@@ -8,7 +8,7 @@ namespace PlanetbaseFramework
         {
         }
 
-        public override void handleAction(GameStateTitle gst)
+        public override void HandleAction(GameStateTitle gst)
         {
             GameManager.getInstance().setGameStateSettings();
         }

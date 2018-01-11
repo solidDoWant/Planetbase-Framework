@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseFramework", "PlanetbaseFramework.csproj", "{74541FF9-9E89-4A95-9C9D-8215BBFACE26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patcher", "..\Planetbase-Modpatcher\Patcher\Patcher.csproj", "{F7701414-50C4-4726-9A5B-573D181471D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMod", "..\Planetbase-TestMod\TestMod.csproj", "{ECEC97B9-1C7D-4131-874D-95AD476B7150}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planetbase-XMLModloaderMod", "..\Planetbase-XMLModloaderMod\Planetbase-XMLModloaderMod.csproj", "{9F7F1448-86C8-4BF6-9EBB-754413836B05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMLModloaderMod", "..\XMLModloaderModV2\XMLModloaderMod.csproj", "{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +27,23 @@ Global
 		{F7701414-50C4-4726-9A5B-573D181471D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7701414-50C4-4726-9A5B-573D181471D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7701414-50C4-4726-9A5B-573D181471D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECEC97B9-1C7D-4131-874D-95AD476B7150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECEC97B9-1C7D-4131-874D-95AD476B7150}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECEC97B9-1C7D-4131-874D-95AD476B7150}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECEC97B9-1C7D-4131-874D-95AD476B7150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F7F1448-86C8-4BF6-9EBB-754413836B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F7F1448-86C8-4BF6-9EBB-754413836B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F7F1448-86C8-4BF6-9EBB-754413836B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F7F1448-86C8-4BF6-9EBB-754413836B05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B4290D9-2661-4259-88F0-1C791384BED5}
 	EndGlobalSection
 EndGlobal

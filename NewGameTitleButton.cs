@@ -8,12 +8,12 @@ namespace PlanetbaseFramework
         {
         }
 
-        public override void handleAction(GameStateTitle gst)
+        public override void HandleAction(GameStateTitle gst)
         {
             if (gst.canAlreadyPlay())
                 GameManager.getInstance().setGameStateLocationSelection();
             else
-                gst.renderTutorialRequestWindow(new GuiDefinitions.Callback(gst.onWindowCancelNewGame));
+                gst.renderTutorialRequestWindow(gst.onWindowCancelNewGame);
         }
     }
 }

@@ -3,22 +3,24 @@
 DO NOT USE PARTS OF, OR THE ENTIRE SCRIPT, AND CLAIM AS YOUR OWN WORK
 */
 
+//Credit for this entire file, less a few minor changes, goes to AARO4130 (https://forum.unity.com/threads/free-runtime-obj-loader.365884/)
+
 using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 namespace PlanetbaseFramework
 {
-    public class OBJLoader
+    public class ObjLoader
     {
-        public static bool splitByMaterial = false;
-        public static string[] searchPaths = new string[] { "", "%FileName%_Textures" + Path.DirectorySeparatorChar };
+        public static bool SplitByMaterial = false;
+        public static string[] SearchPaths = { "", "%FileName%_Textures" + Path.DirectorySeparatorChar };
         //structures
-        struct OBJFace
+        struct ObjFace
         {
-            public string materialName;
-            public string meshName;
-            public int[] indexes;
+            public string MaterialName;
+            public string MeshName;
+            public int[] Indexes;
         }
 
         public static Vector3 ParseVectorFromCMPS(string[] cmps)
@@ -42,7 +44,7 @@ namespace PlanetbaseFramework
 
         public static string OBJGetFilePath(string path, string basePath, string fileName)
         {
-            foreach (string sp in searchPaths)
+            foreach (string sp in SearchPaths)
             {
                 string s = sp.Replace("%FileName%", fileName);
                 if (File.Exists(basePath + s + path))
@@ -174,7 +176,7 @@ namespace PlanetbaseFramework
             List<string> materialNames = new List<string>();
             List<string> objectNames = new List<string>();
             Dictionary<string, int> hashtable = new Dictionary<string, int>();
-            List<OBJFace> faceList = new List<OBJFace>();
+            List<ObjFace> faceList = new List<ObjFace>();
             string cmaterial = "";
             string cmesh = "default";
             //CACHE
@@ -198,7 +200,7 @@ namespace PlanetbaseFramework
                             materialCache = LoadMTLFile(pth, LoadedTextures);
 
                     }
-                    else if ((cmps[0] == "g" || cmps[0] == "o") && splitByMaterial == false)
+                    else if ((cmps[0] == "g" || cmps[0] == "o") && SplitByMaterial == false)
                     {
                         cmesh = data;
                         if (!objectNames.Contains(cmesh))
@@ -214,7 +216,7 @@ namespace PlanetbaseFramework
                             materialNames.Add(cmaterial);
                         }
 
-                        if (splitByMaterial)
+                        if (SplitByMaterial)
                         {
                             if (!objectNames.Contains(cmaterial))
                             {
@@ -306,18 +308,18 @@ namespace PlanetbaseFramework
                         }
                         if (indexes.Length < 5 && indexes.Length >= 3)
                         {
-                            OBJFace f1 = new OBJFace();
-                            f1.materialName = cmaterial;
-                            f1.indexes = new int[] { indexes[0], indexes[1], indexes[2] };
-                            f1.meshName = (splitByMaterial) ? cmaterial : cmesh;
+                            ObjFace f1 = new ObjFace();
+                            f1.MaterialName = cmaterial;
+                            f1.Indexes = new int[] { indexes[0], indexes[1], indexes[2] };
+                            f1.MeshName = (SplitByMaterial) ? cmaterial : cmesh;
                             faceList.Add(f1);
                             if (indexes.Length > 3)
                             {
 
-                                OBJFace f2 = new OBJFace();
-                                f2.materialName = cmaterial;
-                                f2.meshName = (splitByMaterial) ? cmaterial : cmesh;
-                                f2.indexes = new int[] { indexes[2], indexes[3], indexes[0] };
+                                ObjFace f2 = new ObjFace();
+                                f2.MaterialName = cmaterial;
+                                f2.MeshName = (SplitByMaterial) ? cmaterial : cmesh;
+                                f2.Indexes = new int[] { indexes[2], indexes[3], indexes[0] };
                                 faceList.Add(f2);
                             }
                         }
@@ -336,7 +338,7 @@ namespace PlanetbaseFramework
             {
                 GameObject subObject = new GameObject(obj);
                 subObject.transform.parent = parentObject.transform;
-                subObject.transform.localScale = new Vector3(-1, 1, 1);
+                subObject.transform.localScale = new Vector3(-1, 1, 1); //IIRC I did this to correct for some rotation issues? TODO review this
                 //Create mesh
                 Mesh m = new Mesh();
                 m.name = obj;
@@ -349,18 +351,18 @@ namespace PlanetbaseFramework
                 //POPULATE MESH
                 List<string> meshMaterialNames = new List<string>();
 
-                List<OBJFace> ofaces = faceList.FindAll(x => x.meshName == obj);
+                List<ObjFace> ofaces = faceList.FindAll(x => x.MeshName == obj);
                 foreach (string mn in materialNames)
                 {
-                    OBJFace[] faces = ofaces.FindAll(x => x.materialName == mn).ToArray();
+                    ObjFace[] faces = ofaces.FindAll(x => x.MaterialName == mn).ToArray();
                     if (faces.Length > 0)
                     {
                         int[] indexes = new int[0];
-                        foreach (OBJFace f in faces)
+                        foreach (ObjFace f in faces)
                         {
                             int l = indexes.Length;
-                            System.Array.Resize(ref indexes, l + f.indexes.Length);
-                            System.Array.Copy(f.indexes, 0, indexes, l, f.indexes.Length);
+                            Array.Resize(ref indexes, l + f.Indexes.Length);
+                            Array.Copy(f.Indexes, 0, indexes, l, f.Indexes.Length);
                         }
                         meshMaterialNames.Add(mn);
                         if (m.subMeshCount != meshMaterialNames.Count)
@@ -438,8 +440,9 @@ namespace PlanetbaseFramework
                 }
 
                 mr.materials = processedMaterials;
+                mr.enabled = true;
+                mr.useLightProbes = false;
                 mf.mesh = m;
-
             }
 
             return parentObject;

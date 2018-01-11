@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace PlanetbaseFramework
 {
     public abstract class TitleButton
     {
-        public String name { get; }
-        public Boolean enableGUI { get; }
-        public Boolean isBaseGameTitleButton { get; }
+        public string Name { get; }
+        public bool EnableGui { get; }
+        public bool IsBaseGameTitleButton { get; }
 
-        private static LinkedList<TitleButton> allTitleButtons = new LinkedList<TitleButton>();
+        private static readonly LinkedList<TitleButton> AllTitleButtons = new LinkedList<TitleButton>();
 
         static TitleButton()
         {
@@ -22,25 +21,25 @@ namespace PlanetbaseFramework
             new QuitTitleButton();
         }
 
-        protected internal TitleButton(String nameKey, Boolean enableGUI, Boolean isBaseGameTitleButton)
+        protected internal TitleButton(string nameKey, bool enableGui, bool isBaseGameTitleButton)
         {
-            this.name = Planetbase.StringList.get(nameKey);
-            this.enableGUI = enableGUI;
-            this.isBaseGameTitleButton = isBaseGameTitleButton;
+            Name = Planetbase.StringList.get(nameKey);
+            EnableGui = enableGui;
+            IsBaseGameTitleButton = isBaseGameTitleButton;
 
-            allTitleButtons.AddLast(this);
+            AllTitleButtons.AddLast(this);
         }
 
-        public TitleButton(String nameKey, Boolean enableGUI) : this(nameKey, enableGUI, false)
+        protected TitleButton(string nameKey, bool enableGui) : this(nameKey, enableGui, false)
         {
             
         }
 
-        public static LinkedList<TitleButton> getAllTitleButtons()
+        public static LinkedList<TitleButton> GetAllTitleButtons()
         {
-            return allTitleButtons;
+            return AllTitleButtons;
         }
 
-        public abstract void handleAction(Planetbase.GameStateTitle gst);
+        public abstract void HandleAction(Planetbase.GameStateTitle gst);
     }
 }

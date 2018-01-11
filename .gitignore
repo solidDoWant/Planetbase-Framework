@@ -3,9 +3,5 @@ bin/
 *.pdbs
 *.dll
 *.nupkg
-packages/ICSharpCode.NRefactory.5.5.1/lib/Net40/ICSharpCode.NRefactory.Cecil.xml
-packages/ICSharpCode.NRefactory.5.5.1/lib/Net40/ICSharpCode.NRefactory.CSharp.xml
-packages/ICSharpCode.NRefactory.5.5.1/lib/Net40/ICSharpCode.NRefactory.xml
-packages/ICSharpCode.NRefactory.5.5.1/lib/Net40/ICSharpCode.NRefactory.Xml.xml
-.vs/PlanetbaseFramework/v14/.suo
+.vs/*
 *.suo

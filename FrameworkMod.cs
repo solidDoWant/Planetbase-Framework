@@ -4,10 +4,12 @@ namespace PlanetbaseFramework
 {
     class FrameworkMod : ModBase
     {
-        public FrameworkMod() : base("Planetbase Framework")
+        public FrameworkMod()
         {
-            Utils.ErrorTexture = modTextures.Find(x => x.name.Equals("error.png"));
+            Utils.ErrorTexture = ModTextures.Find(x => x.name.Equals("error.png"));
         }
+
+        public override string ModName => "Planetbase Framework";
 
         public override void Init()
         {
@@ -20,7 +22,7 @@ namespace PlanetbaseFramework
             {
             }
 
-            public override void handleAction(GameStateTitle gst)
+            public override void HandleAction(GameStateTitle gst)
             {
                 GameManager.getInstance().setNewState(new ModListGameState());
             }

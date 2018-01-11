@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace PlanetbaseFramework
 {
-    class ModListGameState : GameState
+    //This class was thrown together fairly quickly, but should be a decent example on making new gamestates.
+    public class ModListGameState : GameState
     {
         public GuiRenderer mGuiRenderer = new GuiRenderer();
         public override bool isTitleState()
@@ -18,10 +19,10 @@ namespace PlanetbaseFramework
                 return;
             }
 
-            printLine("Loaded Mods:", 0);
-            for(int i = 0; i < Modloader.modList.Count; i++)
+            PrintLine("Loaded Mods:", 0);
+            for(int i = 0; i < Modloader.ModList.Count; i++)
             {
-                printLine(Modloader.modList[i].ModName, i + 1);
+                PrintLine(Modloader.ModList[i].ModName, i + 1);
             }
 
             if(this.mGuiRenderer.renderBackButton(new Vector2(Screen.width - GuiRenderer.getMenuButtonSize(FontSize.Huge).x, Screen.height - GuiRenderer.getMenuButtonSize(FontSize.Huge).y))){
@@ -29,7 +30,7 @@ namespace PlanetbaseFramework
             }
         }
 
-        private void printLine(string text, int lineNumber)
+        private void PrintLine(string text, int lineNumber)
         {
             Vector2 textLocation = new Vector2(50, 80);
             GUIStyle labelStyle = mGuiRenderer.getLabelStyle(FontSize.Huge, FontStyle.Bold, TextAnchor.LowerLeft, FontType.Title);

@@ -5,62 +5,52 @@ namespace PlanetbaseFramework
 {
     public class BaseModuleType : ModuleType
     {
-        public GameObject moduleObject { get; protected set; }
-        public BaseModuleType(Texture2D icon, GameObject moduleObject)
+        public GameObject[] ModuleObjects { get; protected set; }
+        public string ModuleName { get; protected set; }
+
+        public BaseModuleType(Texture2D icon, GameObject[] moduleObjects)
         {
-            this.moduleObject = moduleObject;
-            this.mIcon = icon;
-            this.mPowerGeneration = -1000;
-            this.mExterior = false;
-            this.mMinSize = 2;
-            this.mMaxSize = 2;
-            this.mHeight = 1f;
-            this.mRequiredStructure.set<ModuleTypeOxygenGenerator>();
-            //this.mExteriorNavRadius = 3f;
-            this.initStrings();
-            this.mCost = new ResourceAmounts();
-            this.mFlags = FlagDome + FlagLightAtNight + FlagWalkable;
-            this.mLayoutType = ModuleType.LayoutType.Normal;
+            //These settings are designed to keep the game from crashing, not to provide any functionality.
+            ModuleObjects = moduleObjects;
+            mIcon = icon;
+            mMinSize = 0;
+            mMaxSize = 0;
+            mDefaultSize = 0;
+            initStrings();
+            mCost = new ResourceAmounts();
         }
 
         public override GameObject loadPrefab(int sizeIndex)
         {
-            
-            moduleObject.calculateSmoothMeshRecursive(ModuleType.mMeshes);
+            int adjustedSizeIndex = sizeIndex - mMinSize;   //Takes into account the edge case where mMinSize != 0
 
-            //Only child objects should have colliders, not the root object
-            if (moduleObject.GetComponent<Collider>() != null)
-            {
-                Debug.LogWarning("COLLISION IN THE ROOT");
-            }
+            ModuleObjects[adjustedSizeIndex].calculateSmoothMeshRecursive(mMeshes);
 
             //Add collider to object for raycasting
-            foreach (Transform transform in moduleObject.transform)
+            foreach (Transform transform in ModuleObjects[adjustedSizeIndex].transform)
             {
+                //Make the collider for the gameobject the same size/shape as the mesh
                 if (transform.gameObject.GetComponent<MeshFilter>() != null)
                 {
                     transform.gameObject.AddComponent<MeshCollider>().sharedMesh = transform.gameObject.GetComponent<MeshFilter>().sharedMesh;
                 }
 
-                if (transform.gameObject.name.isValidTag())
+                //This is copied directly from PB code. Not really sure that it's needed, but I'll leave it in place incase sombody else is comparing this to
+                //PB code
+                if (transform.gameObject.name.IsValidTag())
                 {
                     transform.gameObject.tag = transform.gameObject.name;
                 }
-                else
-                {
-                    Debug.Log(transform.gameObject.name + " is not a valid tag");
-                }
             }
 
-            GameObject moduleObject2 = GameObject.Find(ModuleType.GroupName);
-            if (moduleObject2 == null)
-            {
-                moduleObject2 = new GameObject();
-                moduleObject2.name = ModuleType.GroupName;
-            }
-            moduleObject.transform.SetParent(moduleObject2.transform, false);
-            moduleObject.SetActive(false);
-            return moduleObject;
+            //This is more or less copied from PB code. Not entirely sure the effect of GroupNames on PB. TODO review this
+            GameObject moduleObject2 = GameObject.Find(GroupName) ?? new GameObject { name = GroupName };
+
+            ModuleObjects[adjustedSizeIndex].transform.SetParent(moduleObject2.transform, false);
+
+            ModuleObjects[adjustedSizeIndex].SetActive(false);
+
+            return ModuleObjects[adjustedSizeIndex];
         }
     }
 }
