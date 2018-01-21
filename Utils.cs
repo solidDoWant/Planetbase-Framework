@@ -11,7 +11,8 @@ using UnityEngine;
 namespace PlanetbaseFramework
 {
     public static class Utils
-    {   public static Texture2D ErrorTexture { get; internal set; }
+    {
+        public static Texture2D ErrorTexture { get; internal set; }
 
         public static void LoadStringsFromFile(string absolutePath)
         {
@@ -345,6 +346,11 @@ namespace PlanetbaseFramework
                     }
                 }
             }
+        }
+
+        public static FrameworkMod GetFrameworkMod()
+        {
+            return Modloader.ModList.Find(mod => mod.ModName.Equals("Planetbase Framework")) as FrameworkMod;
         }
     }
 }

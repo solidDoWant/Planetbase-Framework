@@ -11,34 +11,48 @@ namespace PlanetbaseFramework
         public List<Texture2D> ModTextures { get; protected set; }
         public List<GameObject> ModObjects { get; protected set; }
 
+        public virtual Version ModVersion => new Version(0, 0, 0, 0);
+
         protected ModBase()
         {
             try
             {
-                Debug.Log("Loaded " + LoadAllString("assets" + Path.DirectorySeparatorChar + "strings" + Path.DirectorySeparatorChar) + " string file(s)");
+                LoadAllString(Path.Combine("assets", "strings"));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Debug.Log("Couldn't/no strings filies to load");
-            }
-
-            try
-            {
-                ModTextures = LoadAllPng("assets" + Path.DirectorySeparatorChar + "png" + Path.DirectorySeparatorChar);
-            }
-            catch (Exception)
-            {
-                Debug.Log("Couldn't/no PNG files to load");
+                Debug.Log("Failed to load strings files due to exception:");
+                Utils.LogException(e);
             }
 
             try
             {
-                ModObjects = LoadAllObj("assets" + Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar);
+                ModTextures = LoadAllPng(Path.Combine("assets","png"));
 
+                if (ModTextures.Count > 0)
+                {
+                    Debug.Log("Successfully loaded " + ModTextures.Count + " texture(s)");
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Debug.Log("Couldn't/no OBJ files to load");
+                Debug.Log("Failed to load PNG files due to exception:");
+                Utils.LogException(e);
+            }
+
+            try
+            {
+                ModObjects = LoadAllObj(Path.Combine("assets", "obj"));
+
+                if(ModObjects.Count > 0)
+                {
+                    Debug.Log("Successfully loaded " + ModObjects.Count + " object(s)");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Failed to load OBJ files due to exception:");
+                Utils.LogException(e);
             }
         }
 
@@ -62,6 +76,8 @@ namespace PlanetbaseFramework
         {
             string[] files = GetFilesMatchingFiletype("xml", subfolder);
 
+            Debug.Log("Found " + files.Length + " strings files");
+
             foreach (string file in files)
             {
                 Utils.LoadStringsFromFile(file);
@@ -74,6 +90,8 @@ namespace PlanetbaseFramework
         {
             string[] files = GetFilesMatchingFiletype("png", subfolder);
 
+            Debug.Log("Found " + files.Length + " PNG files");
+
             List<Texture2D> loadedFiles = new List<Texture2D>(files.Length);
             foreach (String file in files)
             {
@@ -85,8 +103,9 @@ namespace PlanetbaseFramework
 
         public List<GameObject> LoadAllObj(string subfolder = null)
         {
-
             string[] files = GetFilesMatchingFiletype("obj", subfolder);
+
+            Debug.Log("Found " + files.Length + " OBJ files");
 
             List<GameObject> loadedFiles = new List<GameObject>(files.Length);
             foreach (String file in files)
@@ -108,14 +127,7 @@ namespace PlanetbaseFramework
                 subfolder = string.Empty;
             }
 
-            if (Directory.Exists(this.ModPath + subfolder))
-            {
-                return Directory.GetFiles(this.ModPath + subfolder, "*." + filetype);
-            }
-            else
-            {
-                throw new Exception("Could not load " + filetype.ToUpper() + " files from invalid folder " + this.ModPath + subfolder + Path.DirectorySeparatorChar.ToString());
-            }
+            return Directory.Exists(ModPath + subfolder) ? Directory.GetFiles(ModPath + subfolder, "*." + filetype) : new string[0];
         }
     }
 }

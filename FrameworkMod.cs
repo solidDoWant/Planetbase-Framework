@@ -1,9 +1,13 @@
-﻿using Planetbase;
+﻿using System;
+using System.Reflection;
+using Planetbase;
 
 namespace PlanetbaseFramework
 {
-    class FrameworkMod : ModBase
+    public class FrameworkMod : ModBase
     {
+        public override Version ModVersion => Assembly.GetExecutingAssembly().GetName().Version;
+
         public FrameworkMod()
         {
             Utils.ErrorTexture = ModTextures.Find(x => x.name.Equals("error.png"));

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetbaseFramework", "PlanetbaseFramework.csproj", "{74541FF9-9E89-4A95-9C9D-8215BBFACE26}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planetbase-XMLModloaderMod", "..\Planetbase-XMLModloaderMod\Planetbase-XMLModloaderMod.csproj", "{9F7F1448-86C8-4BF6-9EBB-754413836B05}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMLModloaderMod", "..\XMLModloaderModV2\XMLModloaderMod.csproj", "{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatcherV2", "..\PatcherV2\PatcherV2.csproj", "{D046FF94-10E1-458D-A64C-2FB2F85F1AFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C4CDA74-6FD6-4E6A-8120-3D2A866E47E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D046FF94-10E1-458D-A64C-2FB2F85F1AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D046FF94-10E1-458D-A64C-2FB2F85F1AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D046FF94-10E1-458D-A64C-2FB2F85F1AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D046FF94-10E1-458D-A64C-2FB2F85F1AFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
