@@ -20,9 +20,9 @@ namespace PlanetbaseFramework
             }
 
             PrintLine("Loaded Mods:", 0);
-            for(int i = 0; i < Modloader.ModList.Count; i++)
+            for(int i = 0; i < ModLoader.ModList.Count; i++)
             {
-                PrintLine(Modloader.ModList[i].ModName, i + 1);
+                PrintLine(ModLoader.ModList[i].ModName, i + 1);
             }
 
             if(this.mGuiRenderer.renderBackButton(new Vector2(Screen.width - GuiRenderer.getMenuButtonSize(FontSize.Huge).x, Screen.height - GuiRenderer.getMenuButtonSize(FontSize.Huge).y))){

@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PlanetbaseFramework</RootNamespace>
     <AssemblyName>PlanetbaseFramework</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,48 +50,51 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChallengesTitleButton.cs" />
-    <Compile Include="ContinueGameTitleButton.cs" />
     <Compile Include="FrameworkMod.cs" />
-    <Compile Include="GameStateTitleReplacement.cs" />
+    <Compile Include="Patches\Planetbase\GameStateTitle\AnnouncementPatch.cs" />
+    <Compile Include="Patches\Planetbase\GameStateTitle\TitleButtonPatch.cs" />
     <Compile Include="ModBase.cs" />
-    <Compile Include="LoadGameTitleButton.cs" />
     <Compile Include="ModListGameState.cs" />
-    <Compile Include="Modloader.cs" />
+    <Compile Include="ModLoader.cs" />
     <Compile Include="ModLoaderIgnoreAttribute.cs" />
-    <Compile Include="NewGameTitleButton.cs" />
     <Compile Include="OBJLoader.cs" />
+    <Compile Include="Patches\Planetbase\TitleScene\OnGuiPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuitTitleButton.cs" />
-    <Compile Include="SettingsTitleButton.cs" />
     <Compile Include="BaseModuleType.cs" />
     <Compile Include="StringFile.cs" />
     <Compile Include="TitleButton.cs" />
-    <Compile Include="TutorialTitleButton.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\png\error.png" />
+    <EmbeddedResource Include="assets\png\error.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\strings\framework_en.xml" />
+    <EmbeddedResource Include="assets\strings\framework_en.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
