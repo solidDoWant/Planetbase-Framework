@@ -188,7 +188,7 @@ namespace PlanetbaseFramework
             return Directory.Exists(searchPath) ? Directory.GetFiles(searchPath, "*." + fileType) : new string[0];
         }
 
-        public HarmonyInstance GetHarmonyInstance() => Harmony ?? HarmonyInstance.Create(ModName);
+        public HarmonyInstance GetHarmonyInstance() => Harmony ?? (Harmony = HarmonyInstance.Create(ModName));
 
         public void InjectPatches()
         {
@@ -202,6 +202,7 @@ namespace PlanetbaseFramework
 
         /// <summary>
         /// Do any pre-load actions before embedded resources are loaded, such as removing existing folders/items.
+        /// Warning: this call will be made in the constructor before child initialization.
         /// </summary>
         /// <param name="resourceNames">The name of all the resources to be loaded</param>
         protected virtual void PreProcessEmbeddedResources(string[] resourceNames)
@@ -211,6 +212,7 @@ namespace PlanetbaseFramework
 
         /// <summary>
         /// Do any pre-load actions before an embedded resource is loaded, such as removing existing folders/items.
+        /// Warning: this call will be made in the constructor before child initialization.
         /// </summary>
         /// <param name="resourceName">The name of the resources being loaded</param>
         /// <returns>True if the resource should be loaded, false otherwise</returns>

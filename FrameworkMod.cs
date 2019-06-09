@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Reflection;
 using Planetbase;
-using UnityEngine;
 
 namespace PlanetbaseFramework
 {
     public class FrameworkMod : ModBase
     {
-        public new static Version ModVersion => Assembly.GetExecutingAssembly().GetName().Version;
+        public const string AssemblyVersion = "2.2.0.0";
+        public new static readonly Version ModVersion = new Version(AssemblyVersion);
 
         public FrameworkMod()
         {
@@ -21,11 +20,6 @@ namespace PlanetbaseFramework
             RegisterTitleButton(new ModTitleButton());
 
             InjectPatches();
-        }
-
-        public static void Callback(string condition, string stackTrace, LogType type)
-        {
-
         }
 
         private class ModTitleButton : TitleButton

@@ -29,13 +29,13 @@ namespace PlanetbaseFramework
             //Add collider to object for raycasting
             foreach (Transform transform in ModuleObjects[adjustedSizeIndex].transform)
             {
-                //Make the collider for the gameobject the same size/shape as the mesh
+                //Make the collider for the GameObject the same size/shape as the mesh
                 if (transform.gameObject.GetComponent<MeshFilter>() != null)
                 {
                     transform.gameObject.AddComponent<MeshCollider>().sharedMesh = transform.gameObject.GetComponent<MeshFilter>().sharedMesh;
                 }
 
-                //This is copied directly from PB code. Not really sure that it's needed, but I'll leave it in place incase sombody else is comparing this to
+                //This is copied directly from PB code. Not really sure that it's needed, but I'll leave it in place in case somebody else is comparing this to
                 //PB code
                 if (transform.gameObject.name.IsValidTag())
                 {

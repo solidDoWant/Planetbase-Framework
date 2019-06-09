@@ -182,10 +182,7 @@ namespace PlanetbaseFramework
             }
         }
 
-        public static bool Compare (this Type t1, Type t2)
-        {
-            return t1.FullName.Equals(t2.FullName);
-        }
+        public static bool Compare(this Type t1, Type t2) => t1.FullName != null && t1.FullName.Equals(t2.FullName);
 
         public static string[] ListEmbeddedFiles()
         {
