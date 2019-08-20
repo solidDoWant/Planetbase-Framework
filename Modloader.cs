@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -145,7 +146,7 @@ namespace PlanetbaseFramework
         /// </summary>
         /// <typeparam name="T">The type of the mod to look for</typeparam>
         /// <returns>A list of instantiated mods matching the type</returns>
-        public static List<ModBase> GetModByType<T>() where T : ModBase => GetModByType(typeof(T));
+        public static List<T> GetModByType<T>() where T : ModBase => GetModByType(typeof(T)).Cast<T>().ToList();
 
         /// <summary>
         /// Utility method to get mods that match the provided type
