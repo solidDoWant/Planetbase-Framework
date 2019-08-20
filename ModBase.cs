@@ -192,7 +192,12 @@ namespace PlanetbaseFramework
 
         public void InjectPatches()
         {
-            GetHarmonyInstance().PatchAll(Assembly.GetExecutingAssembly());
+            GetHarmonyInstance().PatchAll(Assembly.GetCallingAssembly());
+        }
+
+        public void InjectPatches(Assembly containingPatches)
+        {
+            GetHarmonyInstance().PatchAll(containingPatches);
         }
 
         public void RegisterTitleButton(TitleButton button)
