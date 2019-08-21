@@ -87,13 +87,18 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="LICENSE" />
     <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="assets\png\error.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="assets\strings\framework_en.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Credits.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

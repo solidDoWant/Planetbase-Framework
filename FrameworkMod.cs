@@ -5,7 +5,7 @@ namespace PlanetbaseFramework
 {
     public class FrameworkMod : ModBase
     {
-        public const string AssemblyVersion = "2.2.0.0";
+        public const string AssemblyVersion = "2.2.1.0";
         public new static readonly Version ModVersion = new Version(AssemblyVersion);
 
         public FrameworkMod()
