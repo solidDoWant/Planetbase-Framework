@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameworkMod.cs" />
+    <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\AnnouncementPatch.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\TitleButtonPatch.cs" />
     <Compile Include="ModBase.cs" />
@@ -100,6 +101,7 @@
   <ItemGroup>
     <Content Include="Credits.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
