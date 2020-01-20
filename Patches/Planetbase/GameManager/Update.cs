@@ -8,7 +8,8 @@ namespace PlanetbaseFramework.Patches.Planetbase.GameManager
     {
         public static void Postfix()
         {
-            ModLoader.UpdateMods();
+            //ModLoader.UpdateMods();
+            ModManager.getInstance().UpdateMods();
         }
     }
 }

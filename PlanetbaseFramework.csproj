@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\games\steam\steamapps\common\Planetbase\Planetbase_Data\Managed\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,24 +51,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
+      <HintPath>..\..\games\steam\steamapps\common\Planetbase\Planetbase_Data\Managed\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\games\steam\steamapps\common\Planetbase\Planetbase_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\games\steam\steamapps\common\Planetbase\Planetbase_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameworkMod.cs" />
+    <Compile Include="GuiRenderer.cs" />
+    <Compile Include="IModLoader.cs" />
+    <Compile Include="IModConfig.cs" />
+    <Compile Include="ModManager.cs" />
+    <Compile Include="IModMetaData.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\AnnouncementPatch.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\TitleButtonPatch.cs" />
@@ -99,6 +108,7 @@
     <EmbeddedResource Include="assets\strings\framework_en.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="assets\strings\framework_de.xml" />
     <Content Include="Credits.txt" />
   </ItemGroup>
   <ItemGroup />
