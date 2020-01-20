@@ -5,15 +5,16 @@ namespace PlanetbaseFramework
 {
     public class FrameworkMod : ModBase
     {
-        public const string AssemblyVersion = "2.2.2.0";
+        public const string AssemblyVersion = "2.3.2.0";
         public new static readonly Version ModVersion = new Version(AssemblyVersion);
+        public const string DefaultModName = "Planetbase Framework";
 
         public FrameworkMod()
         {
             Utils.ErrorTexture = ModTextures.Find(x => x.name.Equals("error.png"));
         }
 
-        public override string ModName { get; } = "Planetbase Framework";
+        public override string ModName { get; } = DefaultModName;
 
         public override void Init()
         {
@@ -24,7 +25,7 @@ namespace PlanetbaseFramework
 
         private class ModTitleButton : TitleButton
         {
-            public ModTitleButton() : base("mod_titlemenu") { }
+            public ModTitleButton() : base("fmod_titlemenu") { }
 
             public override void HandleAction(GameStateTitle gst)
             {

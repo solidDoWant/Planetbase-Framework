@@ -15,6 +15,7 @@ namespace PlanetbaseFramework
         public List<Texture2D> ModTextures { get; protected set; }
         public List<GameObject> ModObjects { get; protected set; }
 
+
         public virtual Version ModVersion => new Version(0, 0, 0, 0);
 
         private HarmonyInstance Harmony { get; set; }
@@ -100,7 +101,7 @@ namespace PlanetbaseFramework
             {
                 ModObjects = LoadAllObjs("obj");
 
-                if(ModObjects.Count > 0)
+                if (ModObjects.Count > 0)
                 {
                     Debug.Log($"Successfully loaded {ModObjects.Count} object(s)");
                 }
@@ -129,6 +130,8 @@ namespace PlanetbaseFramework
         public virtual void Update()
         {
         }
+
+        public virtual void Cleanup() { }
 
         public int LoadAllStrings(string subfolder = null)
         {

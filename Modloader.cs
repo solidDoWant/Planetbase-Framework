@@ -31,7 +31,13 @@ namespace PlanetbaseFramework
 
             if (Directory.Exists(ModBase.BasePath))
             {
+                //legacy support
                 modDLLs.AddRange(Directory.GetFiles(ModBase.BasePath, "*.dll"));
+
+                foreach (string dir in Directory.GetDirectories(ModBase.BasePath))
+                {
+                    modDLLs.AddRange(Directory.GetFiles(dir, "*.dll"));
+                }
             }
             else
             {
@@ -39,11 +45,11 @@ namespace PlanetbaseFramework
                 Directory.CreateDirectory(ModBase.BasePath);
 
                 //Create the planetbase mod folder and extract the assets
-                
+
             }
 
             Debug.Log($"Found {modDLLs.Count} mods");
-            
+
             foreach (var file in modDLLs)
             {
                 Type[] types;
@@ -100,9 +106,13 @@ namespace PlanetbaseFramework
 
                         try
                         {
-                            mod.Init();
-                            ModList.Add(mod);
-                            Debug.Log($"Loaded mod \"{modName}\"");
+                            // nope, just load..
+                            //mod.Init();
+                            if (ModManager.getInstance().RegisterMod(createMetaData(mod), mod))
+                            {
+                                ModList.Add(mod);
+                                Debug.Log($"Loaded mod \"{modName}\"");
+                            }
                         }
                         catch (Exception e)
                         {
@@ -123,22 +133,21 @@ namespace PlanetbaseFramework
         }
 
         /// <summary>
+        /// Give a chance to override the <see cref="IModMetaData"/> implementation by other implementations.
+        /// </summary>
+        /// <param name="mod">The mod</param>
+        /// <returns>A <see cref="IModMetaData"/> implementation of the given mod.</returns>
+        static internal IModMetaData createMetaData(ModBase mod)
+        {
+            return new SelfModMetaData(mod);
+        }
+
+        /// <summary>
         /// Update the mods in the order they were loaded on each game tick.
         /// </summary>
         public static void UpdateMods()
         {
-            foreach(var mod in ModList)
-            {
-                try
-                {
-                    mod.Update();
-                }
-                catch (Exception e)
-                {
-                    Debug.Log($"Error updating mod {mod.ModName}");
-                    Utils.LogException(e);
-                }
-            }
+            ModManager.getInstance().UpdateMods();
         }
 
         /// <summary>
