@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
 using UnityEngine;
 
-namespace PlanetbaseFramework {
+namespace PlanetbaseFramework
+{
 
 
-    public interface IModMetaData {
+    public interface IModMetaData
+    {
 
         string GetName();
         Version GetVersion();
@@ -21,35 +20,43 @@ namespace PlanetbaseFramework {
 
     }
 
-    public class SelfModMetaData : IModMetaData {
+    public class SelfModMetaData : IModMetaData
+    {
 
         private ModBase mod;
 
-        public SelfModMetaData(ModBase mod) {
+        public SelfModMetaData(ModBase mod)
+        {
             this.mod = mod;
         }
 
-        public ModBase GetMod() {
+        public ModBase GetMod()
+        {
             return mod;
         }
 
-        public string GetName() {
+        public string GetName()
+        {
             return mod.ModName;
         }
 
-        public Version GetVersion() {
+        public Version GetVersion()
+        {
             return mod.ModVersion;
         }
 
-        public string GetRootPath() {
+        public string GetRootPath()
+        {
             return mod.ModPath;
         }
 
-        public List<Texture2D> GetTextures() {
+        public List<Texture2D> GetTextures()
+        {
             return mod.ModTextures;
         }
 
-        public List<GameObject> GetObjects() {
+        public List<GameObject> GetObjects()
+        {
             return mod.ModObjects;
         }
 

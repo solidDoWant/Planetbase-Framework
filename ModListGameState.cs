@@ -24,7 +24,7 @@ namespace PlanetbaseFramework
 
             List<IModMetaData> datas = ModManager.getInstance().GetMetaDatas();
             PrintLine("Loaded Mods:", 0);
-            for(var i = 0; i < datas.Count; i++)
+            for (var i = 0; i < datas.Count; i++)
             {
                 string name = datas[i].GetName();
                 string text = string.Format("{0} - ({1})", name, datas[i].GetVersion().ToString());
@@ -45,27 +45,31 @@ namespace PlanetbaseFramework
             }
         }
 
-        private void PrintLine(string text, int lineNumber) {
+        private void PrintLine(string text, int lineNumber)
+        {
             PrintLine(text, lineNumber, Color.blue);
         }
 
         private void PrintLine(string text, int lineNumber, Color color, FontSize size = FontSize.Huge, string modName = null)
         {
             float deltaY = (GuiRenderer.getMenuButtonSize(FontSize.Huge).y);
-            
-            if (modName != null) {
+
+            if (modName != null)
+            {
                 Vector2 startLocation = new Vector2(50, 200);
                 Rect rect = new Rect(startLocation.x, startLocation.y + deltaY * lineNumber, GuiRenderer.getMenuButtonSize(FontSize.Huge).x - 30, GuiRenderer.getMenuButtonSize(FontSize.Huge).y - 30);
                 float aspect = rect.width / rect.height;
                 GUIStyle btnStyle = Singleton<GuiStyles>.getInstance().getBigTextButtonStyle(FontSize.Normal, aspect);
                 Color c = btnStyle.normal.textColor;
                 btnStyle.normal.textColor = color;
-                if (Renderer.renderTitleButton(rect, text, FontSize.Normal)) {
+                if (Renderer.renderTitleButton(rect, text, FontSize.Normal))
+                {
                     ModManager.getInstance().setModActive(modName, !(color == Color.green));
                 }
                 btnStyle.normal.textColor = c;
             }
-            else {
+            else
+            {
                 Vector2 startLocation = new Vector2(55, 200);
                 GUIStyle labelStyle = Renderer.getLabelStyle(size, FontStyle.Bold, TextAnchor.LowerLeft, FontType.Title);
                 labelStyle.normal.textColor = color;
