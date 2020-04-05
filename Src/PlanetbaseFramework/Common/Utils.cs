@@ -17,7 +17,8 @@ namespace PlanetbaseFramework
         /// </summary>
         public static Texture2D ErrorTexture { get; internal set; }
 
-        /// <summary>
+        #region Split to ResourceLoaders
+                /// <summary>
         /// Load the a XML file containing strings (for localization/translations)
         /// </summary>
         /// <param name="absolutePath">The absolute path to the XML file</param>
@@ -130,6 +131,9 @@ namespace PlanetbaseFramework
             return loadedTexture;
         }
 
+        #endregion
+
+        
         /// <summary>
         /// Set the normal map on a texture. This should be called on any normal maps either at the init stage or the constructor of the mod.
         /// </summary>
@@ -149,6 +153,7 @@ namespace PlanetbaseFramework
             texture.SetPixels(pixels);
         }
 
+        #region Split to Object finder
         public static T FindObjectByFilename<T>(this List<T> list, string filename) where T : UnityEngine.Object
         {
             try
@@ -169,8 +174,10 @@ namespace PlanetbaseFramework
         {
             return FindObjectByFilename(list, Path.GetFileName(filepath));
         }
+        #endregion
 
-        public static bool IsValidTag(this string toCheck)
+        #region GameObjectExtensions
+               public static bool IsValidTag(this string toCheck)
         {
             try
             {
@@ -183,6 +190,8 @@ namespace PlanetbaseFramework
         }
 
         public static bool Compare(this Type t1, Type t2) => t1.FullName != null && t1.FullName.Equals(t2.FullName);
+
+        #endregion
 
         public static string[] ListEmbeddedFiles()
         {

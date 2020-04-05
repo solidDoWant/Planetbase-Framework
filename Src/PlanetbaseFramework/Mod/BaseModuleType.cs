@@ -22,7 +22,8 @@ namespace PlanetbaseFramework
 
         public override GameObject loadPrefab(int sizeIndex)
         {
-            int adjustedSizeIndex = sizeIndex - mMinSize;   //Takes into account the edge case where mMinSize != 0
+            //Takes into account the edge case where mMinSize != 0
+            int adjustedSizeIndex = sizeIndex - mMinSize;   
 
             ModuleObjects[adjustedSizeIndex].calculateSmoothMeshRecursive(mMeshes);
 

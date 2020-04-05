@@ -7,122 +7,44 @@ using Harmony;
 using ICSharpCode.SharpZipLib.Zip;
 using PlanetbaseFramework.Patches.Planetbase.GameStateTitle;
 using UnityEngine;
+using System.ComponentModel;
 
 namespace PlanetbaseFramework
 {
     public abstract class ModBase
     {
-        public List<Texture2D> ModTextures { get; protected set; }
-        public List<GameObject> ModObjects { get; protected set; }
+        public abstract string ModName { get; }
 
         public virtual Version ModVersion => new Version(0, 0, 0, 0);
+        public virtual string ModPath => Path.Combine(BasePath, ModName);
+        public virtual string AssetsPath => Path.Combine(ModPath, "assets");
 
-        private HarmonyInstance Harmony { get; set; }
-
-        private static FastZip ZipInstance { get; } = new FastZip();
-
-        protected ModBase()
-        {
-            //Extract embedded assets
-            ZipConstants.DefaultCodePage = 0;   //This is a workaround to get files to extract properly
-
-            var currentAssembly = Assembly.GetCallingAssembly();
-            var manifest = currentAssembly.GetManifestResourceNames();
-
-            PreProcessEmbeddedResources(manifest);
-
-            foreach (var file in manifest)
-            {
-                if (!PreProcessEmbeddedResource(file)) continue;
-
-                Debug.Log($"Processing embedded file \"{file}\"");
-
-                using (var resourceStream = currentAssembly.GetManifestResourceStream(file))
-                {
-                    switch (Path.GetExtension(file))
-                    {
-                        case ".zip":
-                            Debug.Log("zip " + GetResourceRelativeFilePath(file));
-                            ZipInstance.ExtractZip(
-                                resourceStream,
-                                ModPath,
-                                FastZip.Overwrite.Always,
-                                null,
-                                null,
-                                null,
-                                false,
-                                false
-                            );
-                            break;
-                        default:    //Copy the file to a directory matching the name under the mod's folder
-                            var filePath = Path.Combine(ModPath, GetResourceRelativeFilePath(file));
-
-                            Debug.Log($"Loading \"{file}\" to \"{filePath}\"");
-
-                            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-                            using (var fileStream = File.Create(filePath))
-                            {
-                                resourceStream.CopyTo(fileStream);
-                            }
-
-                            break;
-                    }
-                }
-            }
-
-            try
-            {
-                LoadAllStrings("strings");
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Failed to load strings files due to exception:");
-                Utils.LogException(e);
-            }
-
-            try
-            {
-                ModTextures = LoadAllPngs("png");
-
-                if (ModTextures.Count > 0)
-                {
-                    Debug.Log($"Successfully loaded {ModTextures.Count} texture(s)");
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Failed to load PNG files due to exception:");
-                Utils.LogException(e);
-            }
-
-            try
-            {
-                ModObjects = LoadAllObjs("obj");
-
-                if(ModObjects.Count > 0)
-                {
-                    Debug.Log($"Successfully loaded {ModObjects.Count} object(s)");
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Failed to load OBJ files due to exception:");
-                Utils.LogException(e);
-            }
-        }
-
-        public abstract string ModName { get; }
+        public List<Texture2D> ModTextures { get; protected set; }
+        public List<GameObject> ModObjects { get; protected set; }
 
         //Some of you might notice the odd '/' character in this string. This is because native PB code doesn't use Path.DirectorySeparatorChar, causing
         //one char to be wrong. I'll fix it at some point after I rewrite the patcher.
         public static string BasePath { get; } = Path.Combine(Util.getFilesFolder(), "Mods");
 
-        public virtual string ModPath => Path.Combine(BasePath, ModName);
+        private static IResourceUnpacker _resourceUnpacker; 
 
-        public virtual string AssetsPath => Path.Combine(ModPath, "assets");
+        private HarmonyInstance Harmony { get; set; }
 
-        public virtual void Init()  //This is virtual instead of abstract so mods aren't required to implement it. Same with Update below
+
+        protected ModBase()
+        {
+            // Consider moving out.
+            ExtractAssets();
+            LoadStrings();
+            LoadTextures();
+            LoadMeshes();
+            SetupUnpackers();
+        }
+
+        /// <summary>
+        /// This is virtual instead of abstract so mods aren't required to implement it. Same with Update below
+        /// </summary>
+        public virtual void Init()  
         {
         }
 
@@ -226,6 +148,84 @@ namespace PlanetbaseFramework
             return true;
         }
 
+        private static void SetupUnpackers()
+        {
+            var resourceUnpacker = new ResourceUnpacker();
+            
+            var zipUnpacker = new ZipUnpacker();
+            resourceUnpacker.RegisterUnpacker(zipUnpacker);
+
+            var defaultUnpacker = new NoUnpacker();
+            resourceUnpacker.RegisterDefault(defaultUnpacker);
+        }
+
+        private static void ExtractAssets()
+        {
+            var currentAssembly = Assembly.GetCallingAssembly();
+            var manifest = currentAssembly.GetManifestResourceNames();
+
+            PreProcessEmbeddedResources(manifest);
+
+            foreach (var file in manifest)
+            {
+                if (!PreProcessEmbeddedResource(file)) continue;
+
+                Debug.Log($"Processing embedded file \"{file}\"");
+            }
+
+            _resourceUnpacker.Unpack(re)
+        }
+
+        private static void LoadStrings()
+        {
+            // LoadStrings
+            try
+            {
+                LoadAllStrings("strings");
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Failed to load strings files due to exception:");
+                Utils.LogException(e);
+            }
+        }
+
+        private static void LoadTextures()
+        {
+            try
+            {
+                ModTextures = LoadAllPngs("png");
+
+                if (ModTextures.Count > 0)
+                {
+                    Debug.Log($"Successfully loaded {ModTextures.Count} texture(s)");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Failed to load PNG files due to exception:");
+                Utils.LogException(e);
+            }
+        }
+
+        private static void LoadMeshes()
+        {
+            try
+            {
+                ModObjects = LoadAllObjs("obj");
+
+                if (ModObjects.Count > 0)
+                {
+                    Debug.Log($"Successfully loaded {ModObjects.Count} object(s)");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Failed to load OBJ files due to exception:");
+                Utils.LogException(e);
+            }
+        }
+
         private static string GetResourceRelativeFilePath(string resourceName)
         {
             //Remove the project name from the path, including the preceding '.'
@@ -237,5 +237,17 @@ namespace PlanetbaseFramework
 
             return convertedFilePath;
         }
+
+        private class SomethingFastZip : FastZip
+        {
+            public SomethingFastZip()
+            {
+                //This is a workaround to get files to extract properly.
+                // Define properly.
+                // Don't inline comments.
+                ZipConstants.DefaultCodePage = 0;
+            }
+        }
+
     }
 }
