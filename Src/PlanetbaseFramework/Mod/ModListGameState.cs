@@ -8,10 +8,7 @@ namespace PlanetbaseFramework
     {
         private GuiRenderer Renderer { get; } = new GuiRenderer();
 
-        public override bool isTitleState()
-        {
-            return true;
-        }
+        public override bool isTitleState() => true;
 
         public override void onGui()
         {
@@ -20,8 +17,10 @@ namespace PlanetbaseFramework
                 return;
             }
 
+
             PrintLine("Loaded Mods:", 0);
-            for(var i = 0; i < ModLoader.ModList.Count; i++)
+            // This should be split to a method
+            for (var i = 0; i < ModLoader.ModList.Count; i++)
             {
                 PrintLine(ModLoader.ModList[i].ModName, i + 1);
             }

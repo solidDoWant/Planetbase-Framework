@@ -11,12 +11,9 @@ namespace PlanetbaseFramework
      * This is the core class behind loading all mods. The patcher injects calls to loadMods() and updateMods() into the native PB code, which then
      * calls the methods in this file. This allows for minimal changes to PB's native code, while still allowing it to be extended.
      */
-    public class ModLoader
+    public static class ModLoader
     {
-        /// <summary>
-        /// A list of all mods that have been initialized
-        /// </summary>
-        public static List<ModBase> ModList = new List<ModBase>();
+        public static List<ModBase> InitializedMods = new List<ModBase>();
 
         /// <summary>
         /// Called by the game manager on startup to load in mods
@@ -25,6 +22,7 @@ namespace PlanetbaseFramework
         {
             Debug.Log("Loading mods...");
 
+            // Split to function: LoadAssemblyFiles
             var modDLLs = new List<string>();
 
             modDLLs.Add(Assembly.GetExecutingAssembly().Location);
@@ -46,6 +44,7 @@ namespace PlanetbaseFramework
             
             foreach (var file in modDLLs)
             {
+                // Split to function- LoadTypes()
                 Type[] types;
                 try
                 {
@@ -72,6 +71,7 @@ namespace PlanetbaseFramework
                     continue;
                 }
 
+                // Create method- InjectMods(types)
                 foreach (var type in types)
                 {
                     //Skip if the type isn't a mod
