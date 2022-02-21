@@ -60,6 +60,18 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net35\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net35\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net35\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net35\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -68,6 +80,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cecil\CecilExtensions.cs" />
+    <Compile Include="Cecil\ModuleLoader.cs" />
+    <Compile Include="Cecil\Resolver.cs" />
+    <Compile Include="DataStructures\Tuple.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="FrameworkMod.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\AnnouncementPatch.cs" />
@@ -78,6 +95,7 @@
     <Compile Include="ModLoaderIgnoreAttribute.cs" />
     <Compile Include="OBJLoader.cs" />
     <Compile Include="Patches\Planetbase\TitleScene\OnGuiPatch.cs" />
+    <Compile Include="Patches\Planetbase\Util\FilesFolderPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseModuleType.cs" />
     <Compile Include="StringFile.cs" />
@@ -99,6 +117,9 @@
     <EmbeddedResource Include="assets\strings\framework_en.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="assets\reference_licenses\Harmony.txt" />
+    <EmbeddedResource Include="assets\reference_licenses\MonoCecil.txt" />
+    <EmbeddedResource Include="assets\reference_licenses\SharpZipLib.txt" />
     <Content Include="Credits.txt" />
   </ItemGroup>
   <ItemGroup />

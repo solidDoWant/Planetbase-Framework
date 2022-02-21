@@ -3,132 +3,186 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Mono.Cecil;
+using PlanetbaseFramework.Cecil;
 using UnityEngine;
 
 namespace PlanetbaseFramework
 {
     /*
-     * This is the core class behind loading all mods. The patcher injects calls to loadMods() and updateMods() into the native PB code, which then
-     * calls the methods in this file. This allows for minimal changes to PB's native code, while still allowing it to be extended.
+     * This is the core class behind loading all mods. The patcher injects calls to LoadMods(), which then calls the
+     * methods in this file. This allows for minimal changes to PB's native code, while still allowing it to be extended.
+     * Further changes to the base game's code can be implemented with Harmony.
      */
     public class ModLoader
     {
         /// <summary>
-        /// A list of all mods that have been initialized
+        ///     A list of all mods that have been initialized
         /// </summary>
-        public static List<ModBase> ModList = new List<ModBase>();
+        public static List<ModBase> ModList { get; } = new List<ModBase>();
 
         /// <summary>
-        /// Called by the game manager on startup to load in mods
+        ///     Called by the game manager on startup to load in mods
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public static void LoadMods()
         {
-            Debug.Log("Loading mods...");
+            Debug.Log("Planetbase Framework mod loading stage started...");
 
-            var modDLLs = new List<string>();
+            SetupPrerequisites();
 
-            modDLLs.Add(Assembly.GetExecutingAssembly().Location);
+            var modDLLs = GetModCandidates();
+            var totalAttemptedModCount = modDLLs.Sum(ProcessModCandidate);
 
-            if (Directory.Exists(ModBase.BasePath))
-            {
-                modDLLs.AddRange(Directory.GetFiles(ModBase.BasePath, "*.dll"));
-            }
-            else
-            {
-                Debug.Log($"Mod directory does not exist, creating at \"{ModBase.BasePath}\"");
-                Directory.CreateDirectory(ModBase.BasePath);
-
-                //Create the planetbase mod folder and extract the assets
-                
-            }
-
-            Debug.Log($"Found {modDLLs.Count} mods");
-            
-            foreach (var file in modDLLs)
-            {
-                Type[] types;
-                try
-                {
-                    types = Assembly.LoadFile(file).GetTypes();
-                }
-                catch (ReflectionTypeLoadException e)
-                {
-                    Utils.LogException(e);
-                    foreach (var loaderException in e.LoaderExceptions)
-                    {
-                        Utils.LogException(loaderException);
-                    }
-
-                    Debug.Log(
-                        "************************ Note to modders: If you're seeing this exception, you probably are using a a post .Net 2.0.5.0 function.\r\n" +
-                        "For convenience I've made it so you can use mods compiled after 2.0.5.0, however modern features are not available. ************************"
-                    );
-
-                    continue;
-                }
-                catch (Exception e)
-                {
-                    Utils.LogException(e);
-                    continue;
-                }
-
-                foreach (var type in types)
-                {
-                    //Skip if the type isn't a mod
-                    if (!typeof(ModBase).IsAssignableFrom(type) || type.IsAbstract || !type.IsPublic ||
-                        Attribute.IsDefined(type, typeof(ModLoaderIgnoreAttribute))) continue;
-
-                    var typeName = type.Name;
-
-                    Debug.Log($"Loading mod \"{typeName}\" from file \"{file}\"");
-
-                    ModBase mod = null;
-                    try
-                    {
-                        mod = Activator.CreateInstance(type) as ModBase;
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log(
-                            $"Error loading mod from file: \"{file}\" of type: \"{typeName}\". Exception thrown:");
-                        Utils.LogException(e);
-                    }
-
-                    if (mod != null)
-                    {
-                        var modName = mod.ModName;
-
-                        try
-                        {
-                            mod.Init();
-                            ModList.Add(mod);
-                            Debug.Log($"Loaded mod \"{modName}\"");
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Log(
-                                $"Error initializing mod \"{modName}\" from file: \"{file}\" of type: {typeName}"
-                            );
-                            Utils.LogException(e);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log($"Failed to load mod \"{typeName}\" from file \"{file}\"");
-                    }
-                }
-            }
-
-            Debug.Log($"Successfully loaded {modDLLs.Count} mods");
+            Debug.Log($"Successfully loaded {ModList.Count} of {totalAttemptedModCount} mods");
+            if (modDLLs.Count > totalAttemptedModCount)
+                Debug.Log(
+                    "Note: Additional mods may have been loaded by second stage mod loaders (i.e. compatibility layers)");
         }
 
         /// <summary>
-        /// Update the mods in the order they were loaded on each game tick.
+        ///     Attempts to load and initialize mods found in a DLL.
+        /// </summary>
+        /// <param name="dllFilePath">The path to a DLL that may contain mods</param>
+        /// <returns>The number of mods that were found. This may not be the number of mods successfully loaded.</returns>
+        protected static int ProcessModCandidate(string dllFilePath)
+        {
+            var dllModTypes = new LinkedList<TypeDefinition>(FindDllMods(dllFilePath));
+            if (!dllModTypes.Any())
+                return 0;
+
+            Debug.Log($"Found mod(s) in \"{dllFilePath}\". Loading assembly...");
+            var modAssembly = Utils.LoadAssembly(dllFilePath);
+            if (modAssembly == null)
+                return 0;
+
+            var successfullyLoadedModCount = dllModTypes
+                .Select(modType => LoadMod<ModBase>(modAssembly, modType.FullName))
+                .Where(loadedMod => loadedMod != null)
+                .Select(InitializeMod)
+                .Count();
+
+            Debug.Log(
+                $"Successfully loaded {successfullyLoadedModCount} out of {dllModTypes.Count} mods from \"{dllFilePath}\"");
+            return dllModTypes.Count;
+        }
+
+        /// <summary>
+        ///     This is the very first place where PB framework code is hit by the game's code, so
+        ///     there are a few things not strictly related to mod loading that must be setup here.
+        /// </summary>
+        protected static void SetupPrerequisites()
+        {
+            // Ensures that assemblies and their dependencies are resolved properly
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+            EnsureModDirectoryExists();
+        }
+
+        protected static bool InitializeMod(ModBase mod)
+        {
+            try
+            {
+                mod.Init();
+                ModList.Add(mod);
+                Debug.Log($"Loaded mod \"{mod.ModName}\"");
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Error initializing mod \"{mod.ModName}\"");
+                Utils.LogException(e);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Loads and instantiates the a mod of a given type from a given assembly.
+        ///     This does not initialize the mod, only instantiates the type.
+        /// </summary>
+        /// <param name="modAssembly">The assembly containing the provided type</param>
+        /// <param name="modTypeName">The name of the type to load.</param>
+        /// <returns>The loaded mod if successful, null otherwise.</returns>
+        public static T LoadMod<T>(Assembly modAssembly, string modTypeName) where T : ModBase
+        {
+            var assemblyName = modAssembly.GetName().Name;
+            Debug.Log($"Loading mod of type \"{modTypeName}\" from assembly \"{assemblyName}\"");
+
+            T mod = null;
+            try
+            {
+                var modType = modAssembly.GetType(modTypeName);
+                mod = Activator.CreateInstance(modType) as T;
+
+                if (mod == null)
+                    throw new Exception(
+                        $"The type \"{modType.FullName}\" is not convertible to \"{typeof(T).FullName}\".");
+
+                Debug.Log($"Instantiated mod \"{mod.ModName}\" from type \"{modTypeName}\"");
+            }
+            catch (Exception e)
+            {
+                Debug.Log(
+                    $"Error loading mod from assembly: \"{assemblyName}\" of type: \"{modTypeName}\"");
+                Utils.LogException(e);
+            }
+
+            return mod;
+        }
+
+        protected static IEnumerable<TypeDefinition> FindDllMods(string filePath)
+        {
+            Debug.Log($"Checking \"{filePath}\" for Planetbase Framework compatible mods...");
+            return ModuleLoader.LoadByPath(filePath).Types.Where(IsTypeDefinitionValidMod);
+        }
+
+        public static bool IsTypeDefinitionValidMod(TypeDefinition checkingType)
+        {
+            if (!checkingType.IsClass)
+                return false;
+
+            if (checkingType.IsNotPublic)
+                return false;
+
+            if (checkingType.IsAbstract)
+                return false;
+
+            if (checkingType.HasIgnoreAttribute())
+                return false;
+
+            if (!checkingType.HasTypeAsParent(typeof(ModBase).FullName))
+                return false;
+
+            return true;
+        }
+
+        protected static void EnsureModDirectoryExists()
+        {
+            if (Directory.Exists(ModBase.BasePath))
+                return;
+
+            Debug.Log($"Mod directory does not exist, creating at \"{ModBase.BasePath}\"");
+            Directory.CreateDirectory(ModBase.BasePath);
+        }
+
+        protected static List<string> GetModCandidates()
+        {
+            var modDLLs = new List<string>();
+            modDLLs.Add(Assembly.GetExecutingAssembly().Location);
+            modDLLs.AddRange(Directory.GetFiles(ModBase.BasePath, "*.dll"));
+
+            Debug.Log($"Found {modDLLs.Count} mod candidates");
+
+            return modDLLs;
+        }
+
+        /// <summary>
+        ///     Update the mods in the order they were loaded on each game tick.
         /// </summary>
         public static void UpdateMods()
         {
-            foreach(var mod in ModList)
-            {
+            foreach (var mod in ModList)
                 try
                 {
                     mod.Update();
@@ -138,34 +192,32 @@ namespace PlanetbaseFramework
                     Debug.Log($"Error updating mod {mod.ModName}");
                     Utils.LogException(e);
                 }
-            }
         }
 
         /// <summary>
-        /// Utility method to get mods that match the provided type
+        ///     Utility method to get mods that match the provided type
         /// </summary>
         /// <typeparam name="T">The type of the mod to look for</typeparam>
-        /// <returns>A list of instantiated mods matching the type</returns>
-        public static List<T> GetModByType<T>() where T : ModBase => GetModByType(typeof(T)).Cast<T>().ToList();
+        /// <returns>The instantiated mods matching type <c>T</c></returns>
+        // ReSharper disable once UnusedMember.Global
+        public static IEnumerable<T> GetModByType<T>() where T : ModBase
+        {
+            return GetModByType(typeof(T)).Cast<T>();
+        }
 
         /// <summary>
-        /// Utility method to get mods that match the provided type
+        ///     Utility method to get mods that match the provided type
         /// </summary>
         /// <param name="modType">The type of the mod to look for</param>
-        /// <returns>A list of instantiated mods matching the type</returns>
-        public static List<ModBase> GetModByType(Type modType)
+        /// <returns>The instantiated mods matching the type</returns>
+        public static IEnumerable<ModBase> GetModByType(Type modType)
         {
-            var matchedMods = new List<ModBase>();    //oh boy, sure wish I could use linq right about now
+            return ModList.Where(mod => mod.GetType() == modType);
+        }
 
-            foreach (var mod in ModList)
-            {
-                if (mod.GetType() == modType/*.Compare(modType)*/)
-                {
-                    matchedMods.Add(mod);
-                }
-            }
-
-            return matchedMods;
+        protected static Assembly CurrentDomain_AssemblyResolve(object source, ResolveEventArgs e)
+        {
+            return Utils.LoadAssembly(ModuleLoader.LoadByAssemblyName(e.Name).FullyQualifiedName);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Reflection;
 using Harmony;
 using ICSharpCode.SharpZipLib.Zip;
 using PlanetbaseFramework.Patches.Planetbase.GameStateTitle;
+using PlanetbaseFramework.Patches.Planetbase.Util;
 using UnityEngine;
 
 namespace PlanetbaseFramework
@@ -114,9 +115,7 @@ namespace PlanetbaseFramework
 
         public abstract string ModName { get; }
 
-        //Some of you might notice the odd '/' character in this string. This is because native PB code doesn't use Path.DirectorySeparatorChar, causing
-        //one char to be wrong. I'll fix it at some point after I rewrite the patcher.
-        public static string BasePath { get; } = Path.Combine(Util.getFilesFolder(), "Mods");
+        public static string BasePath { get; } = Path.Combine(FilesFolderPatch.FilesFolderPath, "Mods");
 
         public virtual string ModPath => Path.Combine(BasePath, ModName);
 

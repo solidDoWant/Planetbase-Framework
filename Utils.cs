@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -7,9 +8,12 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Planetbase;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 namespace PlanetbaseFramework
 {
+    // TODO this class is a mess, clean it up
     public static class Utils
     {
         /// <summary>
@@ -134,6 +138,7 @@ namespace PlanetbaseFramework
         /// Set the normal map on a texture. This should be called on any normal maps either at the init stage or the constructor of the mod.
         /// </summary>
         /// <param name="texture">The texture to update.</param>
+        // ReSharper disable once UnusedMember.Global
         public static void SetNormalMap(this Texture2D texture)
         {
             var pixels = texture.GetPixels();
@@ -149,7 +154,7 @@ namespace PlanetbaseFramework
             texture.SetPixels(pixels);
         }
 
-        public static T FindObjectByFilename<T>(this List<T> list, string filename) where T : UnityEngine.Object
+        public static T FindObjectByFilename<T>(this List<T> list, string filename) where T : Object
         {
             try
             {
@@ -158,14 +163,13 @@ namespace PlanetbaseFramework
             catch (Exception e)
             {
                 Debug.Log($"Error loading file: \"{filename}\" with type: \"typeof(T)\"");
-                Debug.Log("Stacktrace: ");
-                Debug.Log(e.ToString());
+                LogException(e);
 
                 return null;
             }
         }
 
-        public static T FindObjectByFilepath<T>(this List<T> list, string filepath) where T : UnityEngine.Object
+        public static T FindObjectByFilepath<T>(this List<T> list, string filepath) where T : Object
         {
             return FindObjectByFilename(list, Path.GetFileName(filepath));
         }
@@ -182,40 +186,39 @@ namespace PlanetbaseFramework
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static bool Compare(this Type t1, Type t2) => t1.FullName != null && t1.FullName.Equals(t2.FullName);
 
+        // ReSharper disable once UnusedMember.Global
         public static string[] ListEmbeddedFiles()
         {
             var assembly = Assembly.GetCallingAssembly();
-
             return assembly.GetManifestResourceNames();
         }
 
         public static string GetFileNameFromAssemblyResourceName(string embeddedResourceName)
         {
             var split = embeddedResourceName.Split('.');
-
             return split[split.Length - 2] + '.' + split[split.Length - 1];
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static string[] GetFileNamesFromAssemblyResourceNames(string[] embeddedResourceNames)
         {
             var fileNames = new string[embeddedResourceNames.Length];
 
             for (var i = 0; i < embeddedResourceNames.Length; i++)
-            {
                 fileNames[i] = GetFileNameFromAssemblyResourceName(embeddedResourceNames[i]);
-            }
 
             return fileNames;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static Stream LoadEmbeddedFile(string filePath)
         {
             try
             {
                 var assembly = Assembly.GetCallingAssembly();
-
                 return assembly.GetManifestResourceStream(filePath);
             } catch(Exception e)
             {
@@ -230,68 +233,62 @@ namespace PlanetbaseFramework
             Debug.Log("Exception thrown:".PadLeft(4 * tabCount));
             Debug.Log(e.ToString().PadLeft(4 * tabCount));
 
-            if (e.InnerException == null) return;
+            if (e.InnerException != null)
+            {
+                Debug.Log("Inner exception: ".PadLeft(4 * tabCount));
+                LogException(e.InnerException, tabCount + 1);
+            }
 
-            Debug.Log("Inner exception: ".PadLeft(4 * tabCount));
-            LogException(e.InnerException, tabCount + 1);
+            if (e.GetType() != typeof(ReflectionTypeLoadException))
+                return;
+
+            Debug.Log("Loader exceptions:");
+            foreach (var loaderException in ((ReflectionTypeLoadException) e).LoaderExceptions)
+                LogException(loaderException);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void KeyValuePairToDictionary<TK, TV>(this Dictionary<TK, TV> dictionary, KeyValuePair<TK, TV> kvp)
         {
             dictionary.Add(kvp.Key, kvp.Value);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void AddCollision(this GameObject gameObject)
         {
             if (gameObject.GetComponent<MeshFilter>() != null)
-            {
                 gameObject.AddComponent<MeshCollider>().sharedMesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
-            }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static Texture2D FindTextureWithName(this List<Texture2D> textures, string name)
         {
             foreach (var texture in textures)
-            {
                 if (texture.name.Equals(name))
-                {
                     return texture;
-                }
-            }
 
             Debug.Log($"Couldn't find texture with filename \"{name}\"");
-
             return ErrorTexture;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static List<Type> GetTypeByName(string className)
         {
             var matchingTypes = new List<Type>();
             
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
                 foreach (var type in assembly.GetTypes())
-                {
                     if (className.IndexOf('.') != -1) //Presence of a '.' indicates that the classname includes the namespace
-                    {
                         if (type.FullName.Equals(className))
-                        {
                             matchingTypes.Add(type);
-                        }
-                    }
                     else
-                    {
                         if (type.Name.Equals(className))
-                        {
                             matchingTypes.Add(type);
-                        }
-                    }
-                }
-            }
 
-            return matchingTypes;
+                return matchingTypes;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static int ToInt(this bool toConvert)
         {
             return toConvert ? 1 : 0;
@@ -303,9 +300,7 @@ namespace PlanetbaseFramework
             var logString = "Object properties: ";
 
             foreach(var property in @object.GetType().GetProperties())
-            {
                 logString += $"\r\n{property.Name}: " + (property.GetValue(@object, null) ?? "NULL");
-            }
 
             return logString;
         }
@@ -341,47 +336,106 @@ namespace PlanetbaseFramework
             return logString;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void LogObjectProperties(object @object)
         {
             Debug.Log(GetObjectPropertyValues(@object));
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void LogObjectProperties(GameObject gameObject)
         {
             Debug.Log(GetObjectPropertyValues(gameObject));
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void RecursivelyAddColliders(this Transform t)
         {
             foreach (Transform transform in t)
             {
                 if (transform.gameObject.GetComponent<MeshFilter>() != null)
-                {
-                    transform.gameObject.AddComponent<MeshCollider>().sharedMesh = transform.gameObject.GetComponent<MeshFilter>().sharedMesh;
-                }
+                    transform.gameObject.AddComponent<MeshCollider>().sharedMesh =
+                        transform.gameObject.GetComponent<MeshFilter>().sharedMesh;
 
-                if (t.childCount > 0)
-                {
-                    foreach (Transform subTransform in t)
-                    {
-                        subTransform.RecursivelyAddColliders();
-                    }
-                }
+                if (t.childCount <= 0) 
+                    continue;
+
+                foreach (Transform subTransform in t)
+                    subTransform.RecursivelyAddColliders();
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static FrameworkMod GetFrameworkMod() =>
             ModLoader.ModList.Find(mod => mod.ModName.Equals("Planetbase Framework")) as FrameworkMod;
 
         public static void CopyTo(this Stream input, Stream output)
         {
-            byte[] buffer = new byte[16 * 1024]; // Fairly arbitrary size
+            var buffer = new byte[16 * 1024]; // Fairly arbitrary size
             int bytesRead;
 
             while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
                 output.Write(buffer, 0, bytesRead);
+        }
+
+        public static Assembly LoadAssembly(string filePath)
+        {
+            Assembly loadedAssembly = null;
+            try
+            {
+                loadedAssembly = Assembly.LoadFile(filePath);
+                // This call will usually throw an exception if the assembly load failed to some reason
+                loadedAssembly.GetTypes();
             }
+            catch (ReflectionTypeLoadException e)
+            {
+                LogException(e);
+
+                // If you're reading this then you're probably wondering why I would compile against .Net 3.5 instead of 2.0.5.0. I've found that
+                // some .Net 3.5 functions can be executed, but only if they don't depend on CLR features introduced after 2.0.5.0. Compiling against
+                // .Net 3.5 allows mod makers to import newer libraries (like all the ones I'm using here) despite running on .Net 2.0.5.0 CLR.
+                Debug.Log(
+                    "************************ Note to mod makers: If you're seeing this exception, you probably are using a a post .Net 2.0.5.0 function.\r\n" +
+                    "For convenience I've made it so you can use mods compiled after 2.0.5.0, however modern features are not available. ************************"
+                );
+            }
+            catch (Exception e)
+            {
+                LogException(e);
+            }
+
+            return loadedAssembly;
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public static Type GetCallingModType<T>(int skipFrameCount = 0) where T : ModBase
+        {
+            // Starting at 1 because we know the current frame won't be a ModBase class in any case
+            var stacktrace = new StackTrace(skipFrameCount + 1);
+            for (var i = 0; i < stacktrace.FrameCount; i++)
+            {
+                var frame = stacktrace.GetFrame(i);
+                var method = frame.GetMethod();
+                var stackFrameType = method.DeclaringType;
+
+                if (stackFrameType == null || !stackFrameType.IsSubclassOf(typeof(T)))
+                    continue;
+
+                return stackFrameType;
+            }
+
+            return null;
+        }
+
+        public static bool ArePathsEqual(this string firstPath, string secondPath)
+        {
+            return string.Compare(
+                Path.GetFullPath(firstPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                Path.GetFullPath(secondPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                SystemInfo.operatingSystem.StartsWith("Windows")
+                    ? StringComparison.InvariantCultureIgnoreCase
+                    : StringComparison.CurrentCulture
+            ) == 0;
         }
     }
 }
