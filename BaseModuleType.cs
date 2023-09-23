@@ -18,8 +18,8 @@ namespace PlanetbaseFramework
             ModuleObjectCache = new GameObject[moduleObjects.Length];
             mIcon = icon;
             mMinSize = 0;
-            mMaxSize = 0;
             mDefaultSize = 0;
+            mMaxSize = moduleObjects.Length - 1;
             initStrings();
             mCost = new ResourceAmounts();
         }
