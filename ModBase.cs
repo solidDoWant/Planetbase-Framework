@@ -225,6 +225,12 @@ namespace PlanetbaseFramework
             return true;
         }
 
+        // Resource names will be of the format:
+        // <ProjectName>.some.directory.path.fileName.extension
+        // For example:
+        // * PlanetbaseFramework.assets.png.error.png
+        // * PlanetbaseFramework.LICENSE.txt
+        // This code does not currently support files without an extension.
         private static string GetResourceRelativeFilePath(string resourceName)
         {
             //Remove the project name from the path, including the preceding '.'

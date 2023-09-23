@@ -107,7 +107,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="LICENSE" />
+    <EmbeddedResource Include="LICENSE.txt" />
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
