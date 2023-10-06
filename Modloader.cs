@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
+using Planetbase;
 using PlanetbaseFramework.Cecil;
 using UnityEngine;
 
@@ -21,12 +22,15 @@ namespace PlanetbaseFramework
         /// </summary>
         public static List<ModBase> ModList { get; } = new List<ModBase>();
 
+        protected static PerformanceTimer LoadTimer { get; } = new PerformanceTimer("Mod loading");
+
         /// <summary>
         ///     Called by the game manager on startup to load in mods
         /// </summary>
         // ReSharper disable once UnusedMember.Global
         public static void LoadMods()
         {
+            LoadTimer.start();
             Debug.Log("Planetbase Framework mod loading stage started...");
 
             SetupPrerequisites();
@@ -38,6 +42,9 @@ namespace PlanetbaseFramework
             if (modDLLs.Count > totalAttemptedModCount)
                 Debug.Log(
                     "Note: Additional mods may have been loaded by second stage mod loaders (i.e. compatibility layers)");
+
+            LoadTimer.stop();
+            Debug.Log($"Mod loading took {LoadTimer.formatTime(LoadTimer.getLastMicros())}");
         }
 
         /// <summary>
