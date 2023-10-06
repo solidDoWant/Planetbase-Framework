@@ -75,7 +75,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\System.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -88,6 +90,8 @@
     <Compile Include="Extensions\GameObjectExtensions.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="FrameworkMod.cs" />
+    <Compile Include="GameMechanics\Buildings\BaseModule.cs" />
+    <Compile Include="GameMechanics\Buildings\ICustomModuleProvider.cs" />
     <Compile Include="GameMechanics\Buildings\ModuleModelBuilder.cs" />
     <Compile Include="GameMechanics\Prefabs\InvalidUnpackedSuffixException.cs" />
     <Compile Include="GameMechanics\Prefabs\ModuleTypePrefabLoader.cs" />
@@ -99,6 +103,8 @@
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\GameStateSettings\IsValidResolutionPatch.cs" />
     <Compile Include="Patches\Planetbase\ModuleType\ReplacementLogic.cs" />
+    <Compile Include="Patches\Planetbase\Module\CreateXmlPatch.cs" />
+    <Compile Include="Patches\Planetbase\Module\CreateVectorPatch.cs" />
     <Compile Include="Patches\Planetbase\Module\GetRadiusPatch.cs" />
     <Compile Include="Patches\Planetbase\Module\GetSizeFactorPatch.cs" />
     <Compile Include="Patches\Planetbase\Module\ReplacementLogic.cs" />
@@ -110,10 +116,11 @@
     <Compile Include="ModLoaderIgnoreAttribute.cs" />
     <Compile Include="OBJLoader.cs" />
     <Compile Include="Patches\Planetbase\ModuleType\LoadPrefabPatch.cs" />
+    <Compile Include="Patches\Planetbase\Module\SerializePatch.cs" />
     <Compile Include="Patches\Planetbase\TitleScene\OnGuiPatch.cs" />
     <Compile Include="Patches\Planetbase\Util\FilesFolderPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BaseModuleType.cs" />
+    <Compile Include="GameMechanics\Buildings\BaseModuleType.cs" />
     <Compile Include="StringFile.cs" />
     <Compile Include="TitleButton.cs" />
     <Compile Include="Utils.cs" />

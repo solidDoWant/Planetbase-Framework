@@ -1,7 +1,7 @@
 ﻿using Planetbase;
 using UnityEngine;
 
-namespace PlanetbaseFramework
+namespace PlanetbaseFramework.GameMechanics.Buildings
 {
     public class BaseModuleType : ModuleType
     {

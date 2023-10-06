@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using Planetbase;
+using PlanetbaseFramework.GameMechanics.Buildings;
 using PlanetbaseFramework.Patches.Planetbase.Module;
 using UnityEngine;
 
@@ -31,7 +32,13 @@ namespace PlanetbaseFramework.Patches.Planetbase.GameStateGame
 
             if (instance.mActiveModule == null)
             {
-                var module = global::Planetbase.Module.create(mouseHitInfo.point, instance.mCurrentModuleSize, instance.mPlacedModuleType);
+                global::Planetbase.Module module;
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                if (instance.mPlacedModuleType is ICustomModuleProvider customModuleProvider)
+                    module = customModuleProvider.Create(mouseHitInfo.point, instance.mCurrentModuleSize);
+                else
+                    module = global::Planetbase.Module.create(mouseHitInfo.point, instance.mCurrentModuleSize, instance.mPlacedModuleType);
+
                 module.setRenderTop(instance.mRenderTops);
                 module.setValidPosition(false);
 
