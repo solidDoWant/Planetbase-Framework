@@ -13,7 +13,11 @@ namespace PlanetbaseFramework.Patches.Planetbase.GameStateTitle
         
         public static void Postfix(global::Planetbase.GameStateTitle __instance)
         {
-            //Render the background image
+            // Skip rendering if space key is pressed
+            if (Input.GetKey(KeyCode.Space))
+                return;
+
+            // Render the background image
             var backgroundImage = ResourceList.getInstance().Title.BackgroundRight;
             var textureHeight = Screen.height * backgroundImage.height / 1080f;
             var textureWidth = textureHeight * backgroundImage.width / backgroundImage.height;
@@ -27,7 +31,7 @@ namespace PlanetbaseFramework.Patches.Planetbase.GameStateTitle
                 backgroundImage
             );
 
-            //Render the buttons
+            // Render the buttons
             var menuLocation = Singleton<global::Planetbase.TitleScene>.getInstance().getMenuLocation();
             var menuButtonSize = GuiRenderer.getMenuButtonSize(FontSize.Huge);
             menuLocation.x -= menuButtonSize.x;
