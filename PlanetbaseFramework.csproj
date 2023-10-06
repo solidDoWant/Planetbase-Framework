@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\PlanetbaseFramework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -84,9 +85,21 @@
     <Compile Include="Cecil\ModuleLoader.cs" />
     <Compile Include="Cecil\Resolver.cs" />
     <Compile Include="DataStructures\Tuple.cs" />
+    <Compile Include="Extensions\GameObjectExtensions.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="FrameworkMod.cs" />
+    <Compile Include="GameMechanics\Buildings\ModuleModelBuilder.cs" />
+    <Compile Include="GameMechanics\Prefabs\InvalidUnpackedSuffixException.cs" />
+    <Compile Include="GameMechanics\Prefabs\ModuleTypePrefabLoader.cs" />
+    <Compile Include="GameMechanics\Prefabs\PrefabLoader.cs" />
+    <Compile Include="GameMechanics\Prefabs\PrefabPaths.cs" />
+    <Compile Include="GameMechanics\Prefabs\ResourceTypePrefabLoader.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
+    <Compile Include="Patches\Planetbase\ModuleType\ReplacementLogic.cs" />
+    <Compile Include="Patches\Planetbase\Module\GetRadiusPatch.cs" />
+    <Compile Include="Patches\Planetbase\Module\GetSizeFactorPatch.cs" />
+    <Compile Include="Patches\Planetbase\Module\ReplacementLogic.cs" />
+    <Compile Include="Patches\Planetbase\GameStateGame\TryPlaceModulePatch.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\AnnouncementPatch.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\TitleButtonPatch.cs" />
     <Compile Include="ModBase.cs" />
@@ -130,7 +143,9 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) "C:\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed"</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)pdb2mdb.exe $(TargetPath)
+copy $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed"
+copy $(TargetPath).mdb "C:\Program Files (x86)\Steam\steamapps\common\Planetbase\Planetbase_Data\Managed"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

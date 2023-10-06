@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using Planetbase;
+using PlanetbaseFramework.Extensions;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
@@ -254,10 +255,10 @@ namespace PlanetbaseFramework
         }
 
         // ReSharper disable once UnusedMember.Global
+        [Obsolete("Use PlanetbaseFramework.Extensions.GameObjectExtensions.AddCollisionGeometry instead. Will be removed in a future version.")]
         public static void AddCollision(this GameObject gameObject)
         {
-            if (gameObject.GetComponent<MeshFilter>() != null)
-                gameObject.AddComponent<MeshCollider>().sharedMesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
+            gameObject.AddCollisionGeometry();
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -436,6 +437,20 @@ namespace PlanetbaseFramework
                     ? StringComparison.InvariantCultureIgnoreCase
                     : StringComparison.CurrentCulture
             ) == 0;
+        }
+
+        /// <summary>
+        /// Throws an exception if the type "T" is not in the "Planetbase" namespace
+        /// </summary>
+        public static void ThrowIfNotBaseGameType<T>()
+        {
+            var genericType = typeof(T);
+
+            // The chosen type here (`Planetbase.Constants') is arbitrary and can be any type in the Planetbase
+            // assembly
+            if (genericType.AssemblyQualifiedName != typeof(Planetbase.Constants).AssemblyQualifiedName)
+                throw new Exception(
+                    $"the provided type {genericType.FullName} is not a base game type");
         }
     }
 }
