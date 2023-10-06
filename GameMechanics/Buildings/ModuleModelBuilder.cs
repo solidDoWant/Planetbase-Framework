@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Planetbase;
-using PlanetbaseFramework.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -264,8 +263,6 @@ namespace PlanetbaseFramework.GameMechanics.Buildings
         /// </summary>
         public static GameObject AddCollisionGeometry(GameObject @object)
         {
-            @object.Log();
-
             if (@object.GetComponent<Collider>() != null)
                 return @object;
 
