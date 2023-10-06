@@ -94,13 +94,13 @@
     <Compile Include="GameMechanics\Prefabs\PrefabLoader.cs" />
     <Compile Include="GameMechanics\Prefabs\PrefabPaths.cs" />
     <Compile Include="GameMechanics\Prefabs\ResourceTypePrefabLoader.cs" />
+    <Compile Include="Patches\Planetbase\AnnouncementManager\DownloadThreadPatch.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\ModuleType\ReplacementLogic.cs" />
     <Compile Include="Patches\Planetbase\Module\GetRadiusPatch.cs" />
     <Compile Include="Patches\Planetbase\Module\GetSizeFactorPatch.cs" />
     <Compile Include="Patches\Planetbase\Module\ReplacementLogic.cs" />
     <Compile Include="Patches\Planetbase\GameStateGame\TryPlaceModulePatch.cs" />
-    <Compile Include="Patches\Planetbase\GameStateTitle\AnnouncementPatch.cs" />
     <Compile Include="Patches\Planetbase\GameStateTitle\TitleButtonPatch.cs" />
     <Compile Include="ModBase.cs" />
     <Compile Include="ModListGameState.cs" />
