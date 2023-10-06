@@ -11,6 +11,7 @@ namespace PlanetbaseFramework.Patches.Planetbase.GameStateTitle
     {
         public static List<TitleButton> RegisteredTitleButtons { get; } = new List<TitleButton>();
         
+        // This patch renders buttons on the left side of the screen
         public static void Postfix(global::Planetbase.GameStateTitle __instance)
         {
             // Skip rendering if space key is pressed

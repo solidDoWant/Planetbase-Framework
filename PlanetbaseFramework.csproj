@@ -95,6 +95,7 @@
     <Compile Include="GameMechanics\Prefabs\PrefabPaths.cs" />
     <Compile Include="GameMechanics\Prefabs\ResourceTypePrefabLoader.cs" />
     <Compile Include="Patches\Planetbase\AnnouncementManager\DownloadThreadPatch.cs" />
+    <Compile Include="Patches\Planetbase\GameBehavior\OnApplicationFocus.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\GameStateSettings\IsValidResolutionPatch.cs" />
     <Compile Include="Patches\Planetbase\ModuleType\ReplacementLogic.cs" />
