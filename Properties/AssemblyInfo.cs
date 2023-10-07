@@ -10,7 +10,7 @@ using PlanetbaseFramework;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("solidDoWant")]
 [assembly: AssemblyProduct("PlanetbaseFramework")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
