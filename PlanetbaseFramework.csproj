@@ -101,6 +101,7 @@
     <Compile Include="Patches\Planetbase\AnnouncementManager\DownloadThreadPatch.cs" />
     <Compile Include="Patches\Planetbase\GameBehavior\OnApplicationFocus.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
+    <Compile Include="Patches\Planetbase\GameStateCredits\ConstructorPatch.cs" />
     <Compile Include="Patches\Planetbase\GameStateSettings\IsValidResolutionPatch.cs" />
     <Compile Include="Patches\Planetbase\ModuleType\ReplacementLogic.cs" />
     <Compile Include="Patches\Planetbase\Module\CreateXmlPatch.cs" />

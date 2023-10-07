@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Harmony;
 using ICSharpCode.SharpZipLib.Zip;
+using PlanetbaseFramework.Patches.Planetbase.GameStateCredits;
 using PlanetbaseFramework.Patches.Planetbase.GameStateTitle;
 using PlanetbaseFramework.Patches.Planetbase.Util;
 using UnityEngine;
@@ -111,6 +113,10 @@ namespace PlanetbaseFramework
                 Debug.Log("Failed to load OBJ files due to exception:");
                 Utils.LogException(e);
             }
+
+            var credits = GetCredits().Trim();
+            if (!string.IsNullOrEmpty(credits))
+                ConstructorPatch.Credits[this] = credits;
         }
 
         public abstract string ModName { get; }
@@ -241,6 +247,32 @@ namespace PlanetbaseFramework
                 .Replace('.', Path.DirectorySeparatorChar) + Path.GetExtension(convertedFilePath);
 
             return convertedFilePath;
+        }
+
+        /// <summary>
+        /// This function updates the "Credits" screen with the return value.
+        /// </summary>
+        public virtual string GetCredits()
+        {
+            var authors = GetContributors();
+            if (authors == null)
+                return null;
+
+            if (authors.Count == 0)
+                return null;
+
+            var headerString = $"(h){ModName}(/h)";
+            var authorsString = string.Join("\n", authors.ToArray());
+            return headerString + "\n" + authorsString;
+        }
+
+        /// <summary>
+        /// Called by the default implementation of GetCredits to add the returned
+        /// authors to the credit screen.
+        /// </summary>
+        public virtual ICollection<string> GetContributors()
+        {
+            return new string[] { };
         }
     }
 }

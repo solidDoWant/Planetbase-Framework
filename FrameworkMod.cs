@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Planetbase;
 
 namespace PlanetbaseFramework
@@ -20,6 +21,11 @@ namespace PlanetbaseFramework
             RegisterTitleButton(new ModTitleButton());
 
             InjectPatches();
+        }
+
+        public override ICollection<string> GetContributors()
+        {
+            return new[] { "solidDoWant" };
         }
 
         private class ModTitleButton : TitleButton
