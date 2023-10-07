@@ -52,16 +52,11 @@ namespace PlanetbaseFramework.Patches.Planetbase.GameStateGame
                 instance.mActiveModule.setValidPosition(false);
             }
 
-            var canPlaceModule = false;
+            // This call has b een updated to use the `GetValidSize` function instead of a `Module.ValidSizes` array lookup, which allows for modules larger than
+            // `Module.ValidSizes.Length`
+            var canPlaceModule = instance.mActiveModule.canPlaceModule(mouseHitInfo.point, mouseHitInfo.normal, ReplacementLogic.GetValidSize(instance.mCurrentModuleSize));
             if (instance.inTutorial())
-                // Note: the `validPosition` argument for this function is not marked as `out`, but the function's logic will only write to the variable, not
-                // read. On this assumption it is valid to set `canPlaceModule` to false first, rather than setting it to the result of a 
-                // `canPlaceModule` call.
                 instance.snapToTutorialPosition(ref mouseHitInfo, ref canPlaceModule);
-            else
-                // This call has b een updated to use the `GetValidSize` function instead of a `Module.ValidSizes` array lookup, which allows for modules larger than
-                // `Module.ValidSizes.Length`
-                canPlaceModule = instance.mActiveModule.canPlaceModule(mouseHitInfo.point, mouseHitInfo.normal, ReplacementLogic.GetValidSize(instance.mCurrentModuleSize));
 
             var mouseTerrainPoint = mouseHitInfo.point;
             var terrainFloorHeight = Singleton<TerrainGenerator>.getInstance().getFloorHeight();
