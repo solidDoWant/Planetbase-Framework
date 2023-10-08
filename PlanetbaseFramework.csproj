@@ -93,12 +93,17 @@
     <Compile Include="GameMechanics\Buildings\BaseModule.cs" />
     <Compile Include="GameMechanics\Buildings\ICustomModuleProvider.cs" />
     <Compile Include="GameMechanics\Buildings\ModuleModelBuilder.cs" />
+    <Compile Include="GameMechanics\Components\BaseComponent.cs" />
+    <Compile Include="GameMechanics\Components\ComponentModelBuilder.cs" />
+    <Compile Include="GameMechanics\Models\ModelBuilder.cs" />
     <Compile Include="GameMechanics\Prefabs\InvalidUnpackedSuffixException.cs" />
     <Compile Include="GameMechanics\Prefabs\ModuleTypePrefabLoader.cs" />
     <Compile Include="GameMechanics\Prefabs\PrefabLoader.cs" />
     <Compile Include="GameMechanics\Prefabs\PrefabPaths.cs" />
     <Compile Include="GameMechanics\Prefabs\ResourceTypePrefabLoader.cs" />
     <Compile Include="Patches\Planetbase\AnnouncementManager\DownloadThreadPatch.cs" />
+    <Compile Include="Patches\Planetbase\ComponentType\LoadPrefabPatch.cs" />
+    <Compile Include="Patches\Planetbase\ConstructionComponent\SelectionCastPatch.cs" />
     <Compile Include="Patches\Planetbase\GameBehavior\OnApplicationFocus.cs" />
     <Compile Include="Patches\Planetbase\GameManager\Update.cs" />
     <Compile Include="Patches\Planetbase\GameStateCredits\ConstructorPatch.cs" />
@@ -146,7 +151,9 @@
     <EmbeddedResource Include="assets\reference_licenses\SharpZipLib.txt" />
     <Content Include="Credits.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Patches\Planetbase\Construction\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

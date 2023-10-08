@@ -13,8 +13,7 @@ namespace PlanetbaseFramework.Patches.Planetbase.Module
         public static bool Prefix(Vector3 position, int sizeIndex, global::Planetbase.ModuleType moduleType)
         {
             // Don't run custom logic for base game moduletypes
-            if (moduleType.GetType().AssemblyQualifiedName ==
-                typeof(global::Planetbase.ModuleType).AssemblyQualifiedName)
+            if (Utils.IsBaseGameType(moduleType))
                 return true;
 
             // Don't run custom logic when the custom module type does not support it

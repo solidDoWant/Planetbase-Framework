@@ -19,14 +19,13 @@ namespace PlanetbaseFramework.Patches.Planetbase.Module
             if (moduleTypeNode == null)
                 return true;
 
-            var nodeModuleType = TypeList<global::Planetbase.ModuleType, ModuleTypeList>.find(Serialization.deserializeString(moduleTypeNode));
+            var nodeModuleType = ModuleTypeList.find(Serialization.deserializeString(moduleTypeNode));
             // Run base game logic when the module type cannot be found
             if (nodeModuleType == null)
                 return true;
 
             // Don't run custom logic for base game moduletypes
-            if (nodeModuleType.GetType().AssemblyQualifiedName ==
-                typeof(global::Planetbase.ModuleType).AssemblyQualifiedName)
+            if (Utils.IsBaseGameType(nodeModuleType))
                 return true;
 
             // Don't run custom logic when the custom module type does not support it

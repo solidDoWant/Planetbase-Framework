@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Planetbase;
+using PlanetbaseFramework.GameMechanics.Models;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace PlanetbaseFramework.GameMechanics.Buildings
 {
-    public class ModuleModelBuilder
+    public class ModuleModelBuilder : ModelBuilder<ModuleModelBuilder>
     {
         // These constants are re-listed here so that doc strings can be attached
         // TODO move this to an `Assembly-CSharp.xml` file at some point
@@ -144,13 +143,6 @@ namespace PlanetbaseFramework.GameMechanics.Buildings
         public List<GameObject> PropObjects { get; protected set; } = new List<GameObject>();
         public List<GameObject> UnmanagedObjects { get; protected set; } = new List<GameObject>();
 
-        public ModuleModelBuilder AddObjectToList(GameObject @object, List<GameObject> list)
-        {
-            // Copying the object allows it to be used multiple times, if needed
-            list.Add(Object.Instantiate(@object));
-            return this;
-        }
-
         public ModuleModelBuilder AddFloorObject(GameObject @object)
         {
             return AddObjectToList(@object, FloorObjects);
@@ -257,33 +249,6 @@ namespace PlanetbaseFramework.GameMechanics.Buildings
         }
 
         /// <summary>
-        /// Adds collision geometry to the provided GameObject. If the game object contains a
-        /// mesh filter, then the collision geometry is based off of this. Otherwise it is
-        /// based off the renderer's bounding box.
-        /// </summary>
-        public static GameObject AddCollisionGeometry(GameObject @object)
-        {
-            if (@object.GetComponent<Collider>() != null)
-                return @object;
-
-            var meshFilter = @object.GetComponent<MeshFilter>();
-            if (meshFilter != null)
-            {
-                var meshCollider = @object.AddComponent<MeshCollider>();
-                meshCollider.sharedMesh = meshFilter.sharedMesh;
-                return @object;
-            }
-
-            var renderer = @object.GetComponent<Renderer>() ?? throw new ArgumentException("the provided gameobject has no renderer or mesh filter", nameof(@object));
-            var rendererBoundingBox = renderer.bounds;
-            var boxCollider = @object.AddComponent<BoxCollider>();
-            boxCollider.center = rendererBoundingBox.center;
-            boxCollider.size = rendererBoundingBox.size;
-
-            return @object;
-        }
-
-        /// <summary>
         /// Produced a new GameObject for the builder's configuration.
         /// </summary>
         /// <param name="name">The name of the root object</param>
@@ -292,17 +257,12 @@ namespace PlanetbaseFramework.GameMechanics.Buildings
         {
             var rootObject = new GameObject(name);
 
-            GenerateObjectForList(FloorObjects, TagDomeFloor, rootObject);
-            GenerateObjectForList(TranslucentObjects, TagDomeTranslucent, rootObject);
-            GenerateObjectForList(StaticTranslucentObjects, TagDomeStaticTranslucent, rootObject);
-            GenerateObjectForList(OpaqueObjects, TagDomeOpaque, rootObject);
-            GenerateObjectForList(StaticObjects, TagDomeStatic, rootObject);
-
-            foreach (var childObject in UnmanagedObjects)
-            {
-                var childCopy = Object.Instantiate(childObject);
-                childCopy.transform.SetParent(rootObject.transform, false);
-            }
+            GenerateObjectForList(rootObject, FloorObjects, TagDomeFloor);
+            GenerateObjectForList(rootObject, TranslucentObjects, TagDomeTranslucent);
+            GenerateObjectForList(rootObject, StaticTranslucentObjects, TagDomeStaticTranslucent);
+            GenerateObjectForList(rootObject, OpaqueObjects, TagDomeOpaque);
+            GenerateObjectForList(rootObject, StaticObjects, TagDomeStatic);
+            AddCopiesToParent(rootObject, UnmanagedObjects);
 
             SmoothMeshesRecursively(rootObject);
 
@@ -313,61 +273,6 @@ namespace PlanetbaseFramework.GameMechanics.Buildings
             rootObject.SetActive(false);
 
             return rootObject;
-        }
-
-        /// <summary>
-        /// Processes a given list and adds the to the root object under a new object with the provided tag.
-        /// </summary>
-        protected void GenerateObjectForList(List<GameObject> childObjects, string tag, GameObject rootObject)
-        {
-            if (childObjects.Count == 0)
-                return;
-
-            var listRootObject = new GameObject($"{rootObject.name}_floor")
-            {
-                tag = tag
-            };
-            listRootObject.transform.SetParent(rootObject.transform, false);
-
-            foreach (var childObject in childObjects)
-            {
-                // A copy is made so that this function can be called multiple times to create multiple new game objects
-                // without affecting already created objects
-                var childCopy = Object.Instantiate(childObject);
-                childCopy.transform.SetParent(listRootObject.transform, false);
-            }
-        }
-
-        /// <summary>
-        /// This functions smooths meshes recursively, akin to `calculateSmoothMeshRecursive`. The difference between
-        /// the two functions is that this supports meshes that have already been smoothed, which allows for mixing
-        /// custom game objects with base game prefabs.
-        /// </summary>
-        protected void SmoothMeshesRecursively(GameObject @object)
-        {
-            SmoothMesh(@object);
-
-            foreach (Transform childTransform in @object.transform)
-                SmoothMeshesRecursively(childTransform.gameObject);
-        }
-
-        /// <summary>
-        /// Non-recursive version of SmoothMeshesRecursively. If the object has no mesh filter,
-        /// then nothing is done.
-        /// </summary>
-        protected void SmoothMesh(GameObject @object)
-        {
-            // Do nothing if there is no mesh to smooth
-            var component = @object.GetComponent<MeshFilter>();
-            if (component == null || component.sharedMesh == null) 
-                return;
-
-            // Do nothing if the object already has a smooth mesh component
-            if (@object.GetComponent<MeshComponent>() != null)
-                return;
-
-            var meshComponent = @object.AddComponent<MeshComponent>();
-            meshComponent.setMesh(MeshUtil.smoothVertices(component.sharedMesh), true);
         }
     }
 }

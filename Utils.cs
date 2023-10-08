@@ -439,16 +439,20 @@ namespace PlanetbaseFramework
             ) == 0;
         }
 
+        // The chosen type here (`Planetbase.Constants') is arbitrary and can be any type in the Planetbase
+        // assembly
+        public static bool IsBaseGameType(Type type) => type.Assembly.Equals(typeof(Planetbase.Constants).Assembly);
+        public static bool IsBaseGameType(object instance) => IsBaseGameType(instance.GetType());
+
+        public static bool IsBaseGameType<T>() => IsBaseGameType(typeof(T));
+
         /// <summary>
         /// Throws an exception if the type "T" is not in the "Planetbase" namespace
         /// </summary>
         public static void ThrowIfNotBaseGameType<T>()
         {
             var genericType = typeof(T);
-
-            // The chosen type here (`Planetbase.Constants') is arbitrary and can be any type in the Planetbase
-            // assembly
-            if (genericType.AssemblyQualifiedName != typeof(Planetbase.Constants).AssemblyQualifiedName)
+            if (!IsBaseGameType(genericType))
                 throw new Exception(
                     $"the provided type {genericType.FullName} is not a base game type");
         }
