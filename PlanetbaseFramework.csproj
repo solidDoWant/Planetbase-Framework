@@ -101,6 +101,8 @@
     <Compile Include="GameMechanics\Prefabs\PrefabLoader.cs" />
     <Compile Include="GameMechanics\Prefabs\PrefabPaths.cs" />
     <Compile Include="GameMechanics\Prefabs\ResourceTypePrefabLoader.cs" />
+    <Compile Include="GameMechanics\Resources\BaseResourceType.cs" />
+    <Compile Include="GameMechanics\Resources\ResourceModelBuilder.cs" />
     <Compile Include="Patches\Planetbase\AnnouncementManager\DownloadThreadPatch.cs" />
     <Compile Include="Patches\Planetbase\ComponentType\LoadPrefabPatch.cs" />
     <Compile Include="Patches\Planetbase\ConstructionComponent\SelectionCastPatch.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="OBJLoader.cs" />
     <Compile Include="Patches\Planetbase\ModuleType\LoadPrefabPatch.cs" />
     <Compile Include="Patches\Planetbase\Module\SerializePatch.cs" />
+    <Compile Include="Patches\Planetbase\Resource\FindPatch.cs" />
     <Compile Include="Patches\Planetbase\TitleScene\OnGuiPatch.cs" />
     <Compile Include="Patches\Planetbase\Util\FilesFolderPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -151,9 +154,7 @@
     <EmbeddedResource Include="assets\reference_licenses\SharpZipLib.txt" />
     <Content Include="Credits.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Patches\Planetbase\Construction\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -1,5 +1,7 @@
 ﻿using Planetbase;
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PlanetbaseFramework.GameMechanics.Components
 {
@@ -41,6 +43,17 @@ namespace PlanetbaseFramework.GameMechanics.Components
             var modelCopy = Object.Instantiate(Model);
             modelCopy.transform.SetParent(moduleTypeRootObject.transform, false);
             return modelCopy;
+        }
+
+
+        public virtual void AddResourceProduction<T>(int count = 1, ResourceSubtype subtype = ResourceSubtype.None) where T : ResourceType
+        {
+            if (count < 0)
+                throw new ArgumentException("the number of resources to be added must be a non-negative integer",
+                    nameof(count));
+
+            for (var i = 0; i < count; i++)
+                addResourceProduction<T>();
         }
     }
 }
