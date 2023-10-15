@@ -54,50 +54,11 @@ namespace PlanetbaseFramework
                 ValidationFlags = XmlSchemaValidationFlags.None
             };
 
+            XmlReader reader = null;
             try
             {
                 //Create the reader
-                using (var reader = XmlReader.Create(absolutePath, readerSettings, parserContext))
-                {
-                    //Read and deserialize the file the file
-                    StringFile deserializedStrings;
-                    try
-                    {
-                        deserializedStrings = xmlDeserializer.Deserialize(reader) as StringFile;
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log($"Unable to deserialize file \"{absolutePath}\"");
-                        LogException(e);
-                        return;
-                    }
-
-                    if (deserializedStrings?.Strings == null)
-                    {
-                        Debug.Log(
-                            $"\"{absolutePath}\" is not recognized as a valid strings file. Please check your syntax."
-                        );
-                        return;
-                    }
-
-                    foreach (var loadedString in deserializedStrings.Strings)
-                    {
-                        //Add the strings to the list
-                        StringList.mStrings.Add(loadedString.Key, loadedString.Value);
-
-                        //Add loading hints
-                        if (loadedString.Key.Contains("loading_hint"))
-                        {
-                            StringList.mLoadingHints.Add(loadedString.Value);
-                        }
-                    }
-
-                    StringList.mLoadedFiles.Add(absolutePath);
-
-                    Debug.Log(
-                        $"Successfully loaded {deserializedStrings.Strings.Length} string(s) from \"{absolutePath}\""
-                    );
-                }
+                reader = XmlReader.Create(absolutePath, readerSettings, parserContext);
             }
             catch (Exception e)
             {
@@ -105,7 +66,64 @@ namespace PlanetbaseFramework
                     $"Exception thrown while attempting to create a stream reader for \"{absolutePath}\". Exception thrown: "
                 );
                 Debug.Log(e);
+
+                if (reader == null) 
+                    return;
+
+                // Attempt cleanup
+                try
+                {
+                    reader.Close();
+                }
+                catch (Exception)
+                {
+                    // The reader may or may not be in a closeable state if an exception occurred while creating it.
+                    // Attempt to close and assume if an exception is thrown then it was not in a closeable state.
+                }
+
                 return;
+            }
+
+            using (reader)
+            {
+                //Read and deserialize the file the file
+                StringFile deserializedStrings;
+                try
+                {
+                    deserializedStrings = xmlDeserializer.Deserialize(reader) as StringFile;
+                }
+                catch (Exception e)
+                {
+                    Debug.Log($"Unable to deserialize file \"{absolutePath}\"");
+                    LogException(e);
+                    return;
+                }
+
+                if (deserializedStrings?.Strings == null)
+                {
+                    Debug.Log(
+                        $"\"{absolutePath}\" is not recognized as a valid strings file. Please check your syntax."
+                    );
+                    return;
+                }
+
+                foreach (var loadedString in deserializedStrings.Strings)
+                {
+                    //Add the strings to the list
+                    StringList.mStrings.Add(loadedString.Key, loadedString.Value);
+
+                    //Add loading hints
+                    if (loadedString.Key.Contains("loading_hint"))
+                    {
+                        StringList.mLoadingHints.Add(loadedString.Value);
+                    }
+                }
+
+                StringList.mLoadedFiles.Add(absolutePath);
+
+                Debug.Log(
+                    $"Successfully loaded {deserializedStrings.Strings.Length} string(s) from \"{absolutePath}\""
+                );
             }
 
             StringList.loadFile(absolutePath, StringList.mStrings, false);
