@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Mono.Cecil;
 using Planetbase;
 using PlanetbaseFramework.Cecil;
@@ -120,11 +121,20 @@ namespace PlanetbaseFramework
             try
             {
                 var modType = modAssembly.GetType(modTypeName);
-                mod = Activator.CreateInstance(modType) as T;
+                var constructor = modType.GetConstructor(Type.EmptyTypes) ??
+                                  throw new Exception(
+                                      $"The type \"{modType.FullName}\" does not have a parameterless constructor");
+
+                mod = FormatterServices.GetUninitializedObject(modType) as T;
 
                 if (mod == null)
                     throw new Exception(
                         $"The type \"{modType.FullName}\" is not convertible to \"{typeof(T).FullName}\".");
+
+                // Populate the mod's fields and call constructor
+                // This is safe to assume as non-null as the property name is checked at compile time (if mod.ModAssembly does not exist, then compilation fails)
+                modType.GetProperty(nameof(mod.ModAssembly)).SetValue(mod, modAssembly, null);
+                constructor.Invoke(mod, null);
 
                 Debug.Log($"Instantiated mod \"{mod.ModName}\" from type \"{modTypeName}\"");
             }

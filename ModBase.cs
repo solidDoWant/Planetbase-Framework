@@ -17,6 +17,7 @@ namespace PlanetbaseFramework
     {
         public List<Texture2D> ModTextures { get; protected set; }
         public List<GameObject> ModObjects { get; protected set; }
+        public Assembly ModAssembly { get; protected set; } // This is set by the mod loader and should generally not be set elsewhere except possibly by second stage mod loaders
 
         public virtual Version ModVersion => new Version(0, 0, 0, 0);
 
@@ -26,21 +27,27 @@ namespace PlanetbaseFramework
 
         protected ModBase()
         {
+            ExtractAssemblyResources();
+            LoadResourcesSafe();
+            UpdateCredits();
+        }
+
+        protected virtual void ExtractAssemblyResources()
+        {
             //Extract embedded assets
             ZipConstants.DefaultCodePage = 0;   //This is a workaround to get files to extract properly
 
-            var currentAssembly = Assembly.GetCallingAssembly();
-            var manifest = currentAssembly.GetManifestResourceNames();
+            var manifestResources = ModAssembly.GetManifestResourceNames();
+            PreProcessEmbeddedResources(manifestResources);
 
-            PreProcessEmbeddedResources(manifest);
-
-            foreach (var file in manifest)
+            foreach (var file in manifestResources)
             {
-                if (!PreProcessEmbeddedResource(file)) continue;
+                if (!PreProcessEmbeddedResource(file)) 
+                    continue;
 
                 Debug.Log($"Processing embedded file \"{file}\"");
 
-                using (var resourceStream = currentAssembly.GetManifestResourceStream(file))
+                using (var resourceStream = ModAssembly.GetManifestResourceStream(file))
                 {
                     switch (Path.GetExtension(file))
                     {
@@ -73,7 +80,17 @@ namespace PlanetbaseFramework
                     }
                 }
             }
+        }
 
+        protected virtual void LoadResourcesSafe()
+        {
+            LoadStringsSafe();
+            LoadPngsSafe();
+            LoadObjsSafe();
+        }
+
+        protected virtual void LoadStringsSafe()
+        {
             try
             {
                 LoadAllStrings("strings");
@@ -83,7 +100,10 @@ namespace PlanetbaseFramework
                 Debug.Log("Failed to load strings files due to exception:");
                 Utils.LogException(e);
             }
+        }
 
+        protected virtual void LoadPngsSafe()
+        {
             try
             {
                 ModTextures = LoadAllPngs("png");
@@ -98,12 +118,15 @@ namespace PlanetbaseFramework
                 Debug.Log("Failed to load PNG files due to exception:");
                 Utils.LogException(e);
             }
+        }
 
+        protected virtual void LoadObjsSafe()
+        {
             try
             {
                 ModObjects = LoadAllObjs("obj");
 
-                if(ModObjects.Count > 0)
+                if (ModObjects.Count > 0)
                 {
                     Debug.Log($"Successfully loaded {ModObjects.Count} object(s)");
                 }
@@ -113,8 +136,11 @@ namespace PlanetbaseFramework
                 Debug.Log("Failed to load OBJ files due to exception:");
                 Utils.LogException(e);
             }
+        }
 
-            var credits = GetCredits().Trim();
+        protected virtual void UpdateCredits()
+        {
+            var credits = GetCredits()?.Trim();
             if (!string.IsNullOrEmpty(credits))
                 ConstructorPatch.Credits[this] = credits;
         }
